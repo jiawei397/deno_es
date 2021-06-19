@@ -152,6 +152,14 @@ export class Client {
     });
   }
 
+  deleteByIndex(index: string) {
+    const path = "/" + encodeURIComponent(index);
+    return ajax({
+      url: path,
+      method: "delete",
+    });
+  }
+
   reindex(params: {
     oldIndex: string | number;
     newIndex: string | number;

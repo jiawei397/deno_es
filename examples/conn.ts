@@ -69,6 +69,15 @@ const deleteById = async () => {
   }
 };
 
+const deleteByIndex = async () => {
+  try {
+    const info = await client.deleteByIndex("myindex2");
+    console.log(info);
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 const deleteByQuery = async () => {
   try {
     const info = await client.deleteByQuery({
@@ -106,7 +115,8 @@ console.time("ajax");
 // await create();
 // await count();
 // await update();
-await reIndex();
+// await reIndex();
+await deleteByIndex();
 
 // await deleteById();
 // await deleteByQuery();
