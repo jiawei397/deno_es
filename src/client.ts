@@ -1,7 +1,10 @@
 import { assert, urlParse } from "../deps.ts";
 import { Ajax, ajax, Method } from "./utils/ajax.ts";
+import { generateId } from "./utils/tools.ts";
 
 const DENO_DRIVER_VERSION = "0.0.1";
+
+const type = "_doc";
 
 export class Client {
   // cache db
@@ -45,54 +48,74 @@ export class Client {
 
   count(options: {
     method?: Method;
-    body?: string;
+    data?: string;
     index: string;
   }) {
     assert(this.conn);
     let path = "";
 
-    let { index, body, method } = options;
+    let { index, data, method } = options;
 
     if (index != null) {
-      if (method == null) method = body == null ? "GET" : "POST";
+      if (method == null) method = data == null ? "GET" : "POST";
       path = "/" + encodeURIComponent(index) + "/" + "_count";
     } else {
-      if (method == null) method = body == null ? "GET" : "POST";
+      if (method == null) method = data == null ? "GET" : "POST";
       path = "/" + "_count";
     } // build request object
     return ajax({
       url: path,
       method,
-      data: body,
+      data,
     });
   }
 
   create(params: {
     method?: Method;
-    body: any;
+    data: any;
     id: string | number;
     index: string;
   }) {
     let {
       method = "PUT",
-      body,
+      data,
       id,
       index,
     } = params;
-    let path = "";
-
-    if (index != null && id != null) {
-      const type = "_doc";
-      path = "/" + encodeURIComponent(index) + "/" + encodeURIComponent(type) +
-        "/" + encodeURIComponent(id) + "/" + "_create";
-    } else {
-      path = "/" + encodeURIComponent(index) + "/" + "_create" + "/" +
-        encodeURIComponent(id);
-    } // build request object
+    if (!id) {
+      id = generateId();
+    }
+    const path = "/" + encodeURIComponent(index) + "/" +
+      encodeURIComponent(type) +
+      "/" + encodeURIComponent(id) + "/" + "_create";
     return ajax({
       url: path,
       method,
-      data: body,
+      data,
+    });
+  }
+
+  update(params: {
+    index: string;
+    id: string | number;
+    data: any;
+    isOriginData?: boolean;
+  }) {
+    const {
+      data,
+      id,
+      index,
+      isOriginData,
+    } = params;
+    const path = "/" + encodeURIComponent(index) + "/" +
+      encodeURIComponent(type) +
+      "/" + encodeURIComponent(id) + "/" + "_update";
+    return ajax({
+      url: path,
+      method: "POST",
+      data: isOriginData ? data : {
+        doc: data,
+      },
     });
   }
 
