@@ -89,11 +89,24 @@ const deleteByQuery = async () => {
   }
 };
 
+const reIndex = async () => {
+  try {
+    const info = await client.reindex({
+      oldIndex: "myindex2",
+      newIndex: "myindex",
+    });
+    console.log(info);
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 console.time("ajax");
 // await Array.from(new Array(100)).map(ajax);
-await create();
+// await create();
 // await count();
 // await update();
+await reIndex();
 
 // await deleteById();
 // await deleteByQuery();

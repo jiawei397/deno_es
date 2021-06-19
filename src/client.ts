@@ -152,6 +152,29 @@ export class Client {
     });
   }
 
+  reindex(params: {
+    oldIndex: string | number;
+    newIndex: string | number;
+  }) {
+    const {
+      oldIndex,
+      newIndex,
+    } = params;
+    const path = "/" + "_reindex";
+    return ajax({
+      url: path,
+      method: "POST",
+      data: {
+        source: {
+          index: oldIndex,
+        },
+        dest: {
+          index: newIndex,
+        },
+      },
+    });
+  }
+
   close() {
     if (this.conn) {
       this.conn.close();
