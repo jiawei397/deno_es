@@ -1,5 +1,6 @@
 import { Client } from "../mod.ts";
 import { v4 } from "https://deno.land/std@0.99.0/uuid/mod.ts";
+import mockjs from "https://deno.land/x/deno_mock@v2.0.0/mod.ts";
 
 const client = new Client();
 await client.connect("http://localhost:9200/");
@@ -19,24 +20,15 @@ const count = async () => {
 const create = async () => {
   try {
     const id = v4.generate();
-    const names = await client.create({
+    const info = await client.create({
       index: "myindex2",
       id,
-      data: {
-        deleted: false,
-        // _id: '6058046316761d2e8752aa4c44',
-        _name: "hahs",
-        title: "倚天屠龙记4",
-        content: "剑心通明4",
-        userId: "41",
-        isSecret: false,
-        group: "中国",
-        contentText: "剑心通明4",
-        titleText: "倚天屠龙记4",
-        id: "6058046316761d2e8752aa4c",
-      },
+      data: mockjs.mock({
+        "email": "@EMAIL",
+        "name": "@NAME",
+      }),
     });
-    console.log(names);
+    console.log(info);
   } catch (error) {
     console.error(error);
   }
@@ -77,13 +69,34 @@ const deleteById = async () => {
   }
 };
 
+const deleteByQuery = async () => {
+  try {
+    const info = await client.deleteByQuery({
+      index: "myindex2",
+      data: {
+        query: {
+          "bool": {
+            "must": [{
+              "query_string": { "default_field": "email", "query": "@EMAIL" },
+            }],
+          },
+        },
+      },
+    });
+    console.log(info);
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 console.time("ajax");
 // await Array.from(new Array(100)).map(ajax);
-// await create();
+await create();
 // await count();
 // await update();
 
-await deleteById();
+// await deleteById();
+// await deleteByQuery();
 
 // setTimeout(async () => {
 //   await create();

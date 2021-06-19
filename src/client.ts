@@ -136,6 +136,22 @@ export class Client {
     });
   }
 
+  deleteByQuery(params: {
+    index: string;
+    data: any;
+  }) {
+    const {
+      index,
+      data,
+    } = params;
+    const path = "/" + encodeURIComponent(index) + "/" + "_delete_by_query";
+    return ajax({
+      url: path,
+      method: "POST",
+      data,
+    });
+  }
+
   close() {
     if (this.conn) {
       this.conn.close();
