@@ -65,11 +65,25 @@ const update = async () => {
   }
 };
 
+const deleteById = async () => {
+  try {
+    const info = await client.delete({
+      index: "myindex2",
+      id: 1,
+    });
+    console.log(info);
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 console.time("ajax");
 // await Array.from(new Array(100)).map(ajax);
 // await create();
 // await count();
-await update();
+// await update();
+
+await deleteById();
 
 // setTimeout(async () => {
 //   await create();

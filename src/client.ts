@@ -119,6 +119,23 @@ export class Client {
     });
   }
 
+  delete(params: {
+    index: string;
+    id: string | number;
+  }) {
+    const {
+      id,
+      index,
+    } = params;
+    const path = "/" + encodeURIComponent(index) + "/" +
+      encodeURIComponent(type) +
+      "/" + encodeURIComponent(id);
+    return ajax({
+      url: path,
+      method: "DELETE",
+    });
+  }
+
   close() {
     if (this.conn) {
       this.conn.close();
