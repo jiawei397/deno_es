@@ -67,6 +67,35 @@ export class Client {
     });
   }
 
+  create(params: {
+    method?: Method;
+    body: any;
+    id: string | number;
+    index: string;
+  }) {
+    let {
+      method = "PUT",
+      body,
+      id,
+      index,
+    } = params;
+    let path = "";
+
+    if (index != null && id != null) {
+      const type = "_doc";
+      path = "/" + encodeURIComponent(index) + "/" + encodeURIComponent(type) +
+        "/" + encodeURIComponent(id) + "/" + "_create";
+    } else {
+      path = "/" + encodeURIComponent(index) + "/" + "_create" + "/" +
+        encodeURIComponent(id);
+    } // build request object
+    return ajax({
+      url: path,
+      method,
+      data: body,
+    });
+  }
+
   close() {
     if (this.conn) {
       this.conn.close();
