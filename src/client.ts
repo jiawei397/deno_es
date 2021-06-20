@@ -17,15 +17,17 @@ export class Client {
 
   private conn: Deno.Conn | undefined;
 
-  public connectedCount = 0;
+  connectedCount = 0;
 
-  connectDB(db: string) {
+  private connectDB(db: string) {
     this.db = db;
     Ajax.defaults.baseURL = db;
     const options = urlParse(db);
     return Deno.connect({
       hostname: options.hostname,
       port: Number(options.port),
+    }).then((conn) => {
+      this.conn = conn;
     });
   }
 
@@ -39,12 +41,23 @@ export class Client {
       const promise = this.connectDB(cacheKey);
       this.connectedCount++;
       this.#connectionCache.set(cacheKey, promise);
-      return promise.then((conn) => {
-        this.conn = conn;
-      });
+      return promise;
     } catch (e) {
       throw new Error(`Connection failed: ${e.message || e}`);
     }
+  }
+
+  close() {
+    if (this.conn) {
+      this.conn.close();
+    }
+    this.#dbCache.clear();
+    this.#connectionCache.clear();
+    this.connectedCount = 0;
+  }
+
+  get version() {
+    return DENO_DRIVER_VERSION;
   }
 
   count(options: {
@@ -68,6 +81,8 @@ export class Client {
       url: path,
       method,
       data,
+      // cacheTimeout: 0,
+      // keepalive: false,
     });
   }
 
@@ -211,18 +226,5 @@ export class Client {
   async getAllIndices(): Promise<string[]> {
     const result = await this.indicesStats({});
     return Object.keys(result.indices);
-  }
-
-  close() {
-    if (this.conn) {
-      this.conn.close();
-    }
-    this.#dbCache.clear();
-    this.#connectionCache.clear();
-    this.connectedCount = 0;
-  }
-
-  get version() {
-    return DENO_DRIVER_VERSION;
   }
 }
