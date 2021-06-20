@@ -110,13 +110,37 @@ const reIndex = async () => {
   }
 };
 
+const stat = async () => {
+  try {
+    const info = await client.indicesStats({
+      // index: "myindex",
+    });
+    console.log(info);
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+const getAllIndices = async () => {
+  try {
+    const info = await client.getAllIndices();
+    console.log(info);
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 console.time("ajax");
 // await Array.from(new Array(100)).map(ajax);
 // await create();
 // await count();
 // await update();
 // await reIndex();
-await deleteByIndex();
+// await deleteByIndex();
+
+// await stat();
+
+await getAllIndices();
 
 // await deleteById();
 // await deleteByQuery();

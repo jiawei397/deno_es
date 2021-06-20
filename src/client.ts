@@ -1,4 +1,5 @@
 import { assert, urlParse } from "../deps.ts";
+import { StatInfo } from "./types.ts";
 import { Ajax, ajax, Method } from "./utils/ajax.ts";
 import { generateId } from "./utils/tools.ts";
 
@@ -181,6 +182,35 @@ export class Client {
         },
       },
     });
+  }
+
+  indicesStats(params: {
+    index?: string;
+    method?: Method;
+    metric?: string;
+  }) {
+    const { index, method = "get", metric } = params;
+    let path = "";
+
+    if (index != null && metric != null) {
+      path = "/" + encodeURIComponent(index) + "/" + "_stats" + "/" +
+        encodeURIComponent(metric);
+    } else if (metric != null) {
+      path = "/" + "_stats" + "/" + encodeURIComponent(metric);
+    } else if (index != null) {
+      path = "/" + encodeURIComponent(index) + "/" + "_stats";
+    } else {
+      path = "/" + "_stats";
+    } // build request object
+    return ajax<StatInfo>({
+      url: path,
+      method,
+    });
+  }
+
+  async getAllIndices(): Promise<string[]> {
+    const result = await this.indicesStats({});
+    return Object.keys(result.indices);
   }
 
   close() {
