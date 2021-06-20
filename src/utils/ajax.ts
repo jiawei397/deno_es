@@ -435,6 +435,8 @@ export class BaseAjax {
         config,
         controller,
       });
+    } else {
+      console.debug(`read from cache : ${uniqueKey}`);
     }
     return caches.get(uniqueKey);
   }
