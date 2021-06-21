@@ -61,3 +61,20 @@ export interface CreatedInfo {
 
 export interface UpdatedInfo extends CreatedInfo {
 }
+
+export interface ReIndexInfo {
+  took: number;
+  timed_out: boolean;
+  total: number;
+  updated: number;
+  created: number;
+  deleted: number;
+  batches: number;
+  version_conflicts: number;
+  noops: number;
+  retries: { search: number; bulk: number };
+  throttled_millis: number;
+  requests_per_second: number;
+  throttled_until_millis: number;
+  failures: any[];
+}

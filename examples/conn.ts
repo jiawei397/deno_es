@@ -159,8 +159,8 @@ const search = async () => {
 
 // await create();
 // await count();
-await update();
-// await reIndex();
+// await update();
+await reIndex();
 // await deleteByIndex();
 
 // await stat();

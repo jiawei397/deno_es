@@ -2,6 +2,7 @@ import { assert, urlParse } from "../deps.ts";
 import {
   CountInfo,
   CreatedInfo,
+  ReIndexInfo,
   SearchInfo,
   StatInfo,
   UpdatedInfo,
@@ -183,13 +184,13 @@ export class Client {
   reindex(params: {
     oldIndex: string | number;
     newIndex: string | number;
-  }) {
+  }): Promise<ReIndexInfo> {
     const {
       oldIndex,
       newIndex,
     } = params;
     const path = "/" + "_reindex";
-    return ajax({
+    return ajax<ReIndexInfo>({
       url: path,
       method: "POST",
       data: {
