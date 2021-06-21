@@ -2,6 +2,9 @@ import { assert, urlParse } from "../deps.ts";
 import {
   CountInfo,
   CreatedInfo,
+  DeleteByQueryInfo,
+  DeletedInfo,
+  DeleteIndexInfo,
   ReIndexInfo,
   SearchInfo,
   StatInfo,
@@ -143,7 +146,7 @@ export class Client {
   delete(params: {
     index: string;
     id: string | number;
-  }) {
+  }): Promise<DeletedInfo> {
     const {
       id,
       index,
@@ -151,7 +154,7 @@ export class Client {
     const path = "/" + encodeURIComponent(index) + "/" +
       encodeURIComponent(type) +
       "/" + encodeURIComponent(id);
-    return ajax({
+    return ajax<DeletedInfo>({
       url: path,
       method: "DELETE",
     });
@@ -160,22 +163,22 @@ export class Client {
   deleteByQuery(params: {
     index: string;
     data: any;
-  }) {
+  }): Promise<DeleteByQueryInfo> {
     const {
       index,
       data,
     } = params;
     const path = "/" + encodeURIComponent(index) + "/" + "_delete_by_query";
-    return ajax({
+    return ajax<DeleteByQueryInfo>({
       url: path,
       method: "POST",
       data,
     });
   }
 
-  deleteByIndex(index: string) {
+  deleteByIndex(index: string): Promise<DeleteIndexInfo> {
     const path = "/" + encodeURIComponent(index);
-    return ajax({
+    return ajax<DeleteIndexInfo>({
       url: path,
       method: "delete",
     });
