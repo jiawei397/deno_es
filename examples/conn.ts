@@ -126,6 +126,25 @@ const getAllIndices = async () => {
   }
 };
 
+const search = async () => {
+  try {
+    const info = await client.search({
+      index: "myindex",
+      data: {
+        "query": {
+          // "match_phrase": {
+          "match": {
+            "title": "倚天",
+          },
+        },
+      },
+    });
+    console.log(info);
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 // const command = async () => {
 //   return await limit(async () => {
 //     const time = 100 * Math.round(Math.random() * 10);
@@ -155,3 +174,5 @@ const getAllIndices = async () => {
 //   await create();
 // }, 1000);
 // console.timeEnd("ajax");
+
+await search();

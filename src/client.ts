@@ -227,4 +227,25 @@ export class Client {
     const result = await this.indicesStats({});
     return Object.keys(result.indices);
   }
+
+  search(params: {
+    index?: string;
+    method?: Method;
+    data?: any;
+  }) {
+    let { index, method, data } = params;
+    let path = "";
+    if ((index) != null) {
+      if (method == null) method = data == null ? "GET" : "POST";
+      path = "/" + encodeURIComponent(index) + "/" + "_search";
+    } else {
+      if (method == null) method = data == null ? "GET" : "POST";
+      path = "/" + "_search";
+    }
+    return ajax({
+      url: path,
+      method,
+      data,
+    });
+  }
 }

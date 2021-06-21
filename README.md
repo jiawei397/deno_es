@@ -131,6 +131,25 @@ const getAllIndices = async () => {
     console.error(error);
   }
 };
+
+const search = async () => {
+  try {
+    const info = await client.search({
+      index: "myindex",
+      data: {
+        "query": {
+          // "match_phrase": {
+          "match": {
+            "title": "aa",
+          },
+        },
+      },
+    });
+    console.log(info);
+  } catch (error) {
+    console.error(error);
+  }
+};
 ```
 
 ## TODO
