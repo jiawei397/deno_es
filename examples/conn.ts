@@ -8,11 +8,11 @@ await client.connect("http://localhost:9200/");
 
 const count = async () => {
   try {
-    const info = await client.count({
+    const info: any = await client.count({
       index: "myindex",
       method: "post",
     });
-    console.count("count");
+    console.info("count", info.count);
   } catch (error) {
     console.error(error);
   }
@@ -132,7 +132,7 @@ const getAllIndices = async () => {
 };
 
 const command = async () => {
-  await client.command(async () => {
+  await client.limit(async () => {
     await delay(100 * Math.round(Math.random() * 10));
     console.log("----command-----");
     return "abcd";
@@ -140,7 +140,7 @@ const command = async () => {
 };
 
 console.time("ajax");
-await Array.from(new Array(10000)).map(count);
+await Array.from(new Array(100)).map(count);
 
 // await create();
 // await count();
