@@ -157,9 +157,9 @@ const search = async () => {
 // await Promise.all(Array.from(new Array(100)).map(command));
 // await Promise.all(Array.from(new Array(10000)).map(count));
 
-await create();
+// await create();
 // await count();
-// await update();
+await update();
 // await reIndex();
 // await deleteByIndex();
 

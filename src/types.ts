@@ -58,3 +58,6 @@ export interface CreatedInfo {
   _seq_no: number;
   _primary_term: number;
 }
+
+export interface UpdatedInfo extends CreatedInfo {
+}

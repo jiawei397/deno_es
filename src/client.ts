@@ -1,5 +1,11 @@
 import { assert, urlParse } from "../deps.ts";
-import { CountInfo, CreatedInfo, SearchInfo, StatInfo } from "./types.ts";
+import {
+  CountInfo,
+  CreatedInfo,
+  SearchInfo,
+  StatInfo,
+  UpdatedInfo,
+} from "./types.ts";
 import { Ajax, ajax, Method } from "./utils/ajax.ts";
 import { generateId } from "./utils/tools.ts";
 
@@ -114,7 +120,7 @@ export class Client {
     id: string | number;
     data: any;
     isOriginData?: boolean;
-  }) {
+  }): Promise<UpdatedInfo> {
     const {
       data,
       id,
@@ -124,7 +130,7 @@ export class Client {
     const path = "/" + encodeURIComponent(index) + "/" +
       encodeURIComponent(type) +
       "/" + encodeURIComponent(id) + "/" + "_update";
-    return ajax({
+    return ajax<UpdatedInfo>({
       url: path,
       method: "POST",
       data: isOriginData ? data : {
