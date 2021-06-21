@@ -1,6 +1,6 @@
 # deno_es
 
-> **deno_es** is a **Elastic Search** database driver developed for deno
+> **deno_es** is a **Elastic Search** database driver developed for Deno
 
 ## Examples
 
@@ -132,3 +132,8 @@ const getAllIndices = async () => {
   }
 };
 ```
+
+## TODO
+
+- [ ] other API from [es](https://github.com/elastic/elasticsearch-js)
+- [ ] use one tcp query, and now is using fetch everytime
