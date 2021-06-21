@@ -1,5 +1,5 @@
 import { assert, urlParse } from "../deps.ts";
-import { StatInfo } from "./types.ts";
+import {SearchInfo, StatInfo} from "./types.ts";
 import { Ajax, ajax, Method } from "./utils/ajax.ts";
 import { generateId } from "./utils/tools.ts";
 
@@ -242,7 +242,7 @@ export class Client {
       if (method == null) method = data == null ? "GET" : "POST";
       path = "/" + "_search";
     }
-    return ajax({
+    return ajax<SearchInfo>({
       url: path,
       method,
       data,

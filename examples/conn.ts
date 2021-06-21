@@ -139,7 +139,7 @@ const search = async () => {
         },
       },
     });
-    console.log(info);
+    console.log(info.hits.hits);
   } catch (error) {
     console.error(error);
   }

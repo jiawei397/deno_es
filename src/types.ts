@@ -13,3 +13,27 @@ export interface StatInfo {
     };
   };
 }
+
+export interface Hit {
+  _index: string;
+  _type: string;
+  _source: ObjectConstructor[];
+  _id: string;
+  _score: number;
+}
+
+export interface SearchInfo {
+  took: number;
+  timed_out: boolean;
+  _shards: {
+    total: number;
+    failed: number;
+    successful: number;
+    skipped: number;
+  };
+  hits: {
+    hits: Hit[];
+    total: { value: number; relation: string };
+    max_score: number;
+  };
+}
