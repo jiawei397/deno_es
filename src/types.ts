@@ -83,15 +83,7 @@ export interface DeleteIndexInfo {
   acknowledged: boolean;
 }
 
-export interface DeletedInfo {
-  _index: string;
-  _type: string;
-  _id: string;
-  _version: number;
-  result: string;
-  _shards: { total: number; failed: number; successful: number };
-  _seq_no: number;
-  _primary_term: number;
+export interface DeletedInfo extends CreatedInfo {
 }
 
 export interface DeleteByQueryInfo extends ReIndexInfo {
