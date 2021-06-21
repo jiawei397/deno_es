@@ -1,17 +1,18 @@
 import { Client } from "../mod.ts";
 import { v4 } from "https://deno.land/std@0.99.0/uuid/mod.ts";
 import mockjs from "https://deno.land/x/deno_mock@v2.0.0/mod.ts";
+import { delay } from "../deps.ts";
 
 const client = new Client();
 await client.connect("http://localhost:9200/");
 
 const count = async () => {
   try {
-    const names = await client.count({
-      index: "myindex2",
+    const info = await client.count({
+      index: "myindex",
       method: "post",
     });
-    console.log(names);
+    console.count("count");
   } catch (error) {
     console.error(error);
   }
@@ -21,7 +22,7 @@ const create = async () => {
   try {
     const id = v4.generate();
     const info = await client.create({
-      index: "myindex2",
+      index: "myindex",
       id,
       data: mockjs.mock({
         "email": "@EMAIL",
@@ -37,7 +38,7 @@ const create = async () => {
 const update = async () => {
   try {
     const info = await client.update({
-      index: "myindex2",
+      index: "myindex",
       id: 1,
       data: {
         "_name": "bbb",
@@ -60,7 +61,7 @@ const update = async () => {
 const deleteById = async () => {
   try {
     const info = await client.delete({
-      index: "myindex2",
+      index: "myindex",
       id: 1,
     });
     console.log(info);
@@ -71,7 +72,7 @@ const deleteById = async () => {
 
 const deleteByIndex = async () => {
   try {
-    const info = await client.deleteByIndex("myindex2");
+    const info = await client.deleteByIndex("myindex");
     console.log(info);
   } catch (error) {
     console.error(error);
@@ -81,7 +82,7 @@ const deleteByIndex = async () => {
 const deleteByQuery = async () => {
   try {
     const info = await client.deleteByQuery({
-      index: "myindex2",
+      index: "myindex",
       data: {
         query: {
           "bool": {
@@ -101,7 +102,7 @@ const deleteByQuery = async () => {
 const reIndex = async () => {
   try {
     const info = await client.reindex({
-      oldIndex: "myindex2",
+      oldIndex: "myindex",
       newIndex: "myindex",
     });
     console.log(info);
@@ -130,8 +131,17 @@ const getAllIndices = async () => {
   }
 };
 
+const command = async () => {
+  await client.command(async () => {
+    await delay(100 * Math.round(Math.random() * 10));
+    console.log("----command-----");
+    return "abcd";
+  });
+};
+
 console.time("ajax");
-// await Array.from(new Array(100)).map(ajax);
+await Array.from(new Array(10000)).map(count);
+
 // await create();
 // await count();
 // await update();
@@ -140,7 +150,7 @@ console.time("ajax");
 
 // await stat();
 
-await getAllIndices();
+// await getAllIndices();
 
 // await deleteById();
 // await deleteByQuery();

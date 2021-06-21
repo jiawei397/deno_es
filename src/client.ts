@@ -1,11 +1,16 @@
 import { assert, urlParse } from "../deps.ts";
 import { StatInfo } from "./types.ts";
 import { Ajax, ajax, Method } from "./utils/ajax.ts";
-import { generateId } from "./utils/tools.ts";
+import { eventEmiter, generateId } from "./utils/tools.ts";
 
 const DENO_DRIVER_VERSION = "0.0.1";
 
 const type = "_doc";
+
+interface Task {
+  id: number;
+  func: () => Promise<any>;
+}
 
 export class Client {
   // cache db
@@ -17,7 +22,12 @@ export class Client {
 
   private conn: Deno.Conn | undefined;
 
+  tasks: Task[] = [];
+
   connectedCount = 0;
+
+  requestId = 0;
+  currentTaskCount = 0;
 
   private connectDB(db: string) {
     this.db = db;
@@ -77,13 +87,49 @@ export class Client {
       if (method == null) method = data == null ? "GET" : "POST";
       path = "/" + "_count";
     } // build request object
-    return ajax({
-      url: path,
-      method,
-      data,
-      // cacheTimeout: 0,
-      // keepalive: false,
+    return this.command(() => {
+      return ajax({
+        url: path,
+        method: method!,
+        data,
+        cacheTimeout: 0,
+        // keepalive: false,
+      });
     });
+  }
+
+  command(func: any) {
+    this.tasks.push({
+      id: ++this.requestId,
+      func,
+    });
+
+    const id = this.requestId;
+    // console.log(this.requestId);
+    return new Promise((resolve) => {
+      eventEmiter.on("task" + id, (res) => {
+        // console.log(res + id);
+        resolve(res);
+        return res;
+      });
+      this.runTask();
+    });
+  }
+
+  runTask() {
+    while (this.currentTaskCount < 10) {
+      const task = this.tasks.shift();
+      if (!task) {
+        break;
+      }
+      const id = task.id;
+      this.currentTaskCount++;
+      Promise.resolve(task.func()).then((res) => {
+        eventEmiter.trigger("task" + id, res);
+        this.currentTaskCount--;
+        this.runTask();
+      });
+    }
   }
 
   create(params: {

@@ -128,7 +128,7 @@ export class BaseAjax {
     timeoutErrorStatus: 504,
     stoppedErrorMessage: "Ajax has been stopped! ",
     method: "get",
-    keepalive: true,
+    keepalive: false,
   };
 
   public interceptors = {
