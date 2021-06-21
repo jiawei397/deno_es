@@ -1,21 +1,11 @@
 import { assert, urlParse } from "../deps.ts";
 import { StatInfo } from "./types.ts";
 import { Ajax, ajax, Method } from "./utils/ajax.ts";
-import { eventEmiter, generateId } from "./utils/tools.ts";
+import { generateId } from "./utils/tools.ts";
 
 const DENO_DRIVER_VERSION = "0.0.1";
 
 const type = "_doc";
-
-type TaskCallback = (arg: any) => any;
-type TaskFunc = () => Promise<any>;
-
-interface Task {
-  func: TaskFunc;
-
-  success: TaskCallback;
-  error: TaskCallback;
-}
 
 export class Client {
   // cache db
@@ -27,13 +17,7 @@ export class Client {
 
   private conn: Deno.Conn | undefined;
 
-  tasks: Task[] = [];
-
   connectedCount = 0;
-
-  currentTaskCount = 0;
-
-  maxTaskCount = 100; // 允许最大请求的fetch数量
 
   private connectDB(db: string) {
     this.db = db;
@@ -93,45 +77,13 @@ export class Client {
       if (method == null) method = data == null ? "GET" : "POST";
       path = "/" + "_count";
     } // build request object
-    return this.limit(() => {
-      return ajax({
-        url: path,
-        method: method!,
-        data,
-        cacheTimeout: 0,
-        // keepalive: false,
-      });
+    return ajax({
+      url: path,
+      method: method!,
+      data,
+      cacheTimeout: 0,
+      // keepalive: false,
     });
-  }
-
-  // 限流
-  limit(func: TaskFunc) {
-    return new Promise((resolve, reject) => {
-      this.tasks.push({
-        func,
-        success: resolve,
-        error: reject,
-      });
-      this.runTask();
-    });
-  }
-
-  runTask() {
-    while (this.currentTaskCount < this.maxTaskCount) {
-      const task = this.tasks.shift();
-      if (!task) {
-        break;
-      }
-      this.currentTaskCount++;
-      Promise.resolve(task.func()).then((res) => {
-        task.success(res);
-      }, (err) => {
-        task.error(err);
-      }).finally(() => {
-        this.currentTaskCount--;
-        this.runTask();
-      });
-    }
   }
 
   create(params: {

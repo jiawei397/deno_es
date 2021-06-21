@@ -1,4 +1,5 @@
 import { join } from "https://deno.land/std@0.99.0/path/mod.ts";
+import { limit } from "./task.ts";
 
 export type Method =
   | "get"
@@ -536,6 +537,11 @@ export class Ajax extends BaseAjax {
 
 const instance = new Ajax();
 
-export const ajax = instance.ajax.bind(instance);
-export const get = instance.get.bind(instance);
-export const post = instance.post.bind(instance);
+export const ajax = <T>(config: AjaxConfig) => {
+  return limit<T>(() => {
+    return instance.ajax(config);
+  });
+};
+
+// export const get = instance.get.bind(instance);
+// export const post = instance.post.bind(instance);

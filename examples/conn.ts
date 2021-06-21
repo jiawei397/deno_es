@@ -2,6 +2,7 @@ import { Client } from "../mod.ts";
 import { v4 } from "https://deno.land/std@0.99.0/uuid/mod.ts";
 import mockjs from "https://deno.land/x/deno_mock@v2.0.0/mod.ts";
 import { delay } from "../deps.ts";
+import { limit } from "../src/utils/task.ts";
 
 const client = new Client();
 await client.connect("http://localhost:9200/");
@@ -132,15 +133,16 @@ const getAllIndices = async () => {
 };
 
 const command = async () => {
-  await client.limit(async () => {
-    await delay(100 * Math.round(Math.random() * 10));
-    console.log("----command-----");
+  return await limit(async () => {
+    const time = 100 * Math.round(Math.random() * 10);
+    await delay(time);
     return "abcd";
   });
 };
 
 console.time("ajax");
-await Array.from(new Array(100)).map(count);
+await Promise.all(Array.from(new Array(100)).map(command));
+// await Promise.all(Array.from(new Array(10000)).map(count));
 
 // await create();
 // await count();
