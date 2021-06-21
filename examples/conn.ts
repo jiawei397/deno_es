@@ -21,7 +21,7 @@ const count = async () => {
 
 const create = async () => {
   try {
-    const id = 1; //v4.generate();
+    const id = v4.generate();
     const info = await client.create({
       index: "myindex",
       id,
@@ -157,8 +157,8 @@ const search = async () => {
 // await Promise.all(Array.from(new Array(100)).map(command));
 // await Promise.all(Array.from(new Array(10000)).map(count));
 
-// await create();
-await count();
+await create();
+// await count();
 // await update();
 // await reIndex();
 // await deleteByIndex();

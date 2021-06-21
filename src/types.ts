@@ -47,3 +47,14 @@ export interface CountInfo {
     skipped: number;
   };
 }
+
+export interface CreatedInfo {
+  _index: string;
+  _type: string;
+  _id: string;
+  _version: number;
+  result: string;
+  _shards: { total: number; failed: number; successful: number };
+  _seq_no: number;
+  _primary_term: number;
+}

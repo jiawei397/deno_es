@@ -1,5 +1,5 @@
 import { assert, urlParse } from "../deps.ts";
-import { CountInfo, SearchInfo, StatInfo } from "./types.ts";
+import { CountInfo, CreatedInfo, SearchInfo, StatInfo } from "./types.ts";
 import { Ajax, ajax, Method } from "./utils/ajax.ts";
 import { generateId } from "./utils/tools.ts";
 
@@ -89,7 +89,7 @@ export class Client {
     data: any;
     id: string | number;
     index: string;
-  }) {
+  }): Promise<CreatedInfo> {
     let {
       method = "PUT",
       data,
@@ -102,7 +102,7 @@ export class Client {
     const path = "/" + encodeURIComponent(index) + "/" +
       encodeURIComponent(type) +
       "/" + encodeURIComponent(id) + "/" + "_create";
-    return ajax({
+    return ajax<CreatedInfo>({
       url: path,
       method,
       data,
