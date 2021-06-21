@@ -1,5 +1,5 @@
 import { assert, urlParse } from "../deps.ts";
-import {SearchInfo, StatInfo} from "./types.ts";
+import { CountInfo, SearchInfo, StatInfo } from "./types.ts";
 import { Ajax, ajax, Method } from "./utils/ajax.ts";
 import { generateId } from "./utils/tools.ts";
 
@@ -64,7 +64,7 @@ export class Client {
     method?: Method;
     data?: string;
     index: string;
-  }) {
+  }): Promise<CountInfo> {
     assert(this.conn);
     let path = "";
 
@@ -76,13 +76,11 @@ export class Client {
     } else {
       if (method == null) method = data == null ? "GET" : "POST";
       path = "/" + "_count";
-    } // build request object
-    return ajax({
+    }
+    return ajax<CountInfo>({
       url: path,
       method: method!,
       data,
-      cacheTimeout: 0,
-      // keepalive: false,
     });
   }
 
@@ -203,7 +201,7 @@ export class Client {
     index?: string;
     method?: Method;
     metric?: string;
-  }) {
+  }): Promise<StatInfo> {
     const { index, method = "get", metric } = params;
     let path = "";
 
@@ -232,7 +230,7 @@ export class Client {
     index?: string;
     method?: Method;
     data?: any;
-  }) {
+  }): Promise<SearchInfo> {
     let { index, method, data } = params;
     let path = "";
     if ((index) != null) {

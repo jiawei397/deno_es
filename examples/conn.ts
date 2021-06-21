@@ -13,7 +13,7 @@ const count = async () => {
       index: "myindex",
       method: "post",
     });
-    console.info("count", info.count);
+    console.info("count", info);
   } catch (error) {
     console.error(error);
   }
@@ -158,7 +158,7 @@ const search = async () => {
 // await Promise.all(Array.from(new Array(10000)).map(count));
 
 // await create();
-// await count();
+await count();
 // await update();
 // await reIndex();
 // await deleteByIndex();
@@ -175,4 +175,4 @@ const search = async () => {
 // }, 1000);
 // console.timeEnd("ajax");
 
-await search();
+// await search();

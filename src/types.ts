@@ -37,3 +37,13 @@ export interface SearchInfo {
     max_score: number;
   };
 }
+
+export interface CountInfo {
+  count: number;
+  _shards: {
+    total: number;
+    failed: number;
+    successful: number;
+    skipped: number;
+  };
+}
