@@ -13,7 +13,7 @@ import {
 import { Ajax, ajax, Method } from "./utils/ajax.ts";
 import { generateId } from "./utils/tools.ts";
 
-const DENO_DRIVER_VERSION = "0.0.1";
+const DENO_DRIVER_VERSION = "0.0.3";
 
 const type = "_doc";
 
@@ -72,37 +72,37 @@ export class Client {
 
   count(options: {
     method?: Method;
-    data?: string;
+    body?: string;
     index: string;
   }): Promise<CountInfo> {
     assert(this.conn);
     let path = "";
 
-    let { index, data, method } = options;
+    let { index, body, method } = options;
 
     if (index != null) {
-      if (method == null) method = data == null ? "GET" : "POST";
+      if (method == null) method = body == null ? "GET" : "POST";
       path = "/" + encodeURIComponent(index) + "/" + "_count";
     } else {
-      if (method == null) method = data == null ? "GET" : "POST";
+      if (method == null) method = body == null ? "GET" : "POST";
       path = "/" + "_count";
     }
     return ajax<CountInfo>({
       url: path,
       method: method!,
-      data,
+      data: body,
     });
   }
 
   create(params: {
     method?: Method;
-    data: any;
+    body: any;
     id: string | number;
     index: string;
   }): Promise<CreatedInfo> {
     let {
       method = "PUT",
-      data,
+      body,
       id,
       index,
     } = params;
@@ -115,18 +115,18 @@ export class Client {
     return ajax<CreatedInfo>({
       url: path,
       method,
-      data,
+      data: body,
     });
   }
 
   update(params: {
     index: string;
     id: string | number;
-    data: any;
+    body: any;
     isOriginData?: boolean;
   }): Promise<UpdatedInfo> {
     const {
-      data,
+      body,
       id,
       index,
       isOriginData,
@@ -137,8 +137,8 @@ export class Client {
     return ajax<UpdatedInfo>({
       url: path,
       method: "POST",
-      data: isOriginData ? data : {
-        doc: data,
+      data: isOriginData ? body : {
+        doc: body,
       },
     });
   }
@@ -162,17 +162,17 @@ export class Client {
 
   deleteByQuery(params: {
     index: string;
-    data: any;
+    body: any;
   }): Promise<DeleteByQueryInfo> {
     const {
       index,
-      data,
+      body,
     } = params;
     const path = "/" + encodeURIComponent(index) + "/" + "_delete_by_query";
     return ajax<DeleteByQueryInfo>({
       url: path,
       method: "POST",
-      data,
+      data: body,
     });
   }
 
@@ -239,21 +239,21 @@ export class Client {
   search(params: {
     index?: string;
     method?: Method;
-    data?: any;
+    body?: any;
   }): Promise<SearchInfo> {
-    let { index, method, data } = params;
+    let { index, method, body } = params;
     let path = "";
     if ((index) != null) {
-      if (method == null) method = data == null ? "GET" : "POST";
+      if (method == null) method = body == null ? "GET" : "POST";
       path = "/" + encodeURIComponent(index) + "/" + "_search";
     } else {
-      if (method == null) method = data == null ? "GET" : "POST";
+      if (method == null) method = body == null ? "GET" : "POST";
       path = "/" + "_search";
     }
     return ajax<SearchInfo>({
       url: path,
       method,
-      data,
+      data: body,
     });
   }
 }

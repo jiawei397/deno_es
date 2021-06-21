@@ -32,7 +32,7 @@ const create = async () => {
     const info = await client.create({
       index: "myindex",
       id,
-      data: Mock.mock({
+      body: Mock.mock({
         "email": "@EMAIL",
         "name": "@NAME",
       }),
@@ -48,7 +48,7 @@ const update = async () => {
     const info = await client.update({
       index: "myindex",
       id: 1,
-      data: Mock.mock({
+      body: Mock.mock({
         "email": "@EMAIL",
         "name": "@NAME",
       }),
@@ -84,7 +84,7 @@ const deleteByQuery = async () => {
   try {
     const info = await client.deleteByQuery({
       index: "myindex",
-      data: {
+      body: {
         query: {
           "bool": {
             "must": [{
@@ -136,7 +136,7 @@ const search = async () => {
   try {
     const info = await client.search({
       index: "myindex",
-      data: {
+      body: {
         "query": {
           // "match_phrase": {
           "match": {
