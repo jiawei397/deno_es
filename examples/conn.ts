@@ -1,6 +1,6 @@
 import { Client } from "../mod.ts";
 import { v4 } from "https://deno.land/std@0.99.0/uuid/mod.ts";
-import mockjs from "https://deno.land/x/deno_mock@v2.0.0/mod.ts";
+import Mock from "https://deno.land/x/deno_mock@v2.0.0/mod.ts";
 import { delay } from "../deps.ts";
 import { limit } from "../src/utils/task.ts";
 
@@ -21,11 +21,11 @@ const count = async () => {
 
 const create = async () => {
   try {
-    const id = v4.generate();
+    const id = 1; //v4.generate();
     const info = await client.create({
       index: "myindex",
       id,
-      data: mockjs.mock({
+      data: Mock.mock({
         "email": "@EMAIL",
         "name": "@NAME",
       }),
@@ -41,17 +41,10 @@ const update = async () => {
     const info = await client.update({
       index: "myindex",
       id: 1,
-      data: {
-        "_name": "bbb",
-        "title": "倚天屠龙记",
-        "content": "剑心通明4",
-        "userId": "41",
-        "isSecret": false,
-        "group": "中国",
-        "contentText": "剑心通明4",
-        "titleText": "倚天屠龙记4",
-        "id": "6058046316761d2e8752aa4c",
-      },
+      data: Mock.mock({
+        "email": "@EMAIL",
+        "name": "@NAME",
+      }),
     });
     console.log(info);
   } catch (error) {
@@ -104,11 +97,11 @@ const reIndex = async () => {
   try {
     const info = await client.reindex({
       oldIndex: "myindex",
-      newIndex: "myindex",
+      newIndex: "myindex2",
     });
     console.log(info);
   } catch (error) {
-    console.error(error);
+    console.error("error", error);
   }
 };
 
@@ -120,6 +113,7 @@ const stat = async () => {
     console.log(info);
   } catch (error) {
     console.error(error);
+    client.close();
   }
 };
 
@@ -132,16 +126,16 @@ const getAllIndices = async () => {
   }
 };
 
-const command = async () => {
-  return await limit(async () => {
-    const time = 100 * Math.round(Math.random() * 10);
-    await delay(time);
-    return "abcd";
-  });
-};
+// const command = async () => {
+//   return await limit(async () => {
+//     const time = 100 * Math.round(Math.random() * 10);
+//     await delay(time);
+//     return "abcd";
+//   });
+// };
 
-console.time("ajax");
-await Promise.all(Array.from(new Array(100)).map(command));
+// console.time("ajax");
+// await Promise.all(Array.from(new Array(100)).map(command));
 // await Promise.all(Array.from(new Array(10000)).map(count));
 
 // await create();
@@ -160,4 +154,4 @@ await Promise.all(Array.from(new Array(100)).map(command));
 // setTimeout(async () => {
 //   await create();
 // }, 1000);
-console.timeEnd("ajax");
+// console.timeEnd("ajax");

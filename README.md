@@ -6,16 +6,21 @@
 
 ```ts
 import { Client } from "../mod.ts";
+import { v4 } from "https://deno.land/std@0.99.0/uuid/mod.ts";
+import Mock from "https://deno.land/x/deno_mock@v2.0.0/mod.ts";
+import { delay } from "../deps.ts";
+import { limit } from "../src/utils/task.ts";
+
 const client = new Client();
 await client.connect("http://localhost:9200/");
 
 const count = async () => {
   try {
-    const names = await client.count({
-      index: "myindex2",
+    const info: any = await client.count({
+      index: "myindex",
       method: "post",
     });
-    console.log(names);
+    console.info("count", info.count);
   } catch (error) {
     console.error(error);
   }
@@ -23,24 +28,107 @@ const count = async () => {
 
 const create = async () => {
   try {
-    const names = await client.create({
-      index: "myindex2",
-      id: 3,
-      body: {
-        title: "当时明月在",
-        id: "6058046316761d2e8752aa4c",
-      },
+    const id = v4.generate();
+    const info = await client.create({
+      index: "myindex",
+      id,
+      data: Mock.mock({
+        "email": "@EMAIL",
+        "name": "@NAME",
+      }),
     });
-    console.log(names);
+    console.log(info);
   } catch (error) {
     console.error(error);
   }
 };
 
-console.time("ajax");
-// await Array.from(new Array(100)).map(ajax);
-await count();
-await create();
-console.timeEnd("ajax");
+const update = async () => {
+  try {
+    const info = await client.update({
+      index: "myindex",
+      id: 1,
+      data: Mock.mock({
+        "email": "@EMAIL",
+        "name": "@NAME",
+      }),
+    });
+    console.log(info);
+  } catch (error) {
+    console.error(error);
+  }
+};
 
+const deleteById = async () => {
+  try {
+    const info = await client.delete({
+      index: "myindex",
+      id: 1,
+    });
+    console.log(info);
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+const deleteByIndex = async () => {
+  try {
+    const info = await client.deleteByIndex("myindex");
+    console.log(info);
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+const deleteByQuery = async () => {
+  try {
+    const info = await client.deleteByQuery({
+      index: "myindex",
+      data: {
+        query: {
+          "bool": {
+            "must": [{
+              "query_string": { "default_field": "email", "query": "@EMAIL" },
+            }],
+          },
+        },
+      },
+    });
+    console.log(info);
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+const reIndex = async () => {
+  try {
+    const info = await client.reindex({
+      oldIndex: "myindex",
+      newIndex: "myindex2",
+    });
+    console.log(info);
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+const stat = async () => {
+  try {
+    const info = await client.indicesStats({
+      // index: "myindex",
+    });
+    console.log(info);
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+const getAllIndices = async () => {
+  try {
+    const info = await client.getAllIndices();
+    console.log(info);
+  } catch (error) {
+    console.error(error);
+  }
+};
 ```
