@@ -1,5 +1,7 @@
 import { assert, urlParse } from "../deps.ts";
+import { Indices } from "./indices.ts";
 import {
+  BulkInfo,
   CountInfo,
   CreatedInfo,
   DeleteByQueryInfo,
@@ -7,10 +9,10 @@ import {
   DeleteIndexInfo,
   ReIndexInfo,
   SearchInfo,
-  StatInfo,
   UpdatedInfo,
 } from "./types.ts";
 import { Ajax, ajax, Method } from "./utils/ajax.ts";
+import { serializer } from "./utils/serializer.ts";
 import { generateId } from "./utils/tools.ts";
 
 const DENO_DRIVER_VERSION = "0.0.3";
@@ -28,6 +30,8 @@ export class Client {
   private conn: Deno.Conn | undefined;
 
   connectedCount = 0;
+
+  indices = new Indices();
 
   private connectDB(db: string) {
     this.db = db;
@@ -207,32 +211,8 @@ export class Client {
     });
   }
 
-  indicesStats(params: {
-    index?: string;
-    method?: Method;
-    metric?: string;
-  }): Promise<StatInfo> {
-    const { index, method = "get", metric } = params;
-    let path = "";
-
-    if (index != null && metric != null) {
-      path = "/" + encodeURIComponent(index) + "/" + "_stats" + "/" +
-        encodeURIComponent(metric);
-    } else if (metric != null) {
-      path = "/" + "_stats" + "/" + encodeURIComponent(metric);
-    } else if (index != null) {
-      path = "/" + encodeURIComponent(index) + "/" + "_stats";
-    } else {
-      path = "/" + "_stats";
-    } // build request object
-    return ajax<StatInfo>({
-      url: path,
-      method,
-    });
-  }
-
   async getAllIndices(): Promise<string[]> {
-    const result = await this.indicesStats({});
+    const result = await this.indices.stats({});
     return Object.keys(result.indices);
   }
 
@@ -254,6 +234,33 @@ export class Client {
       url: path,
       method,
       data: body,
+    });
+  }
+
+  /**
+   * https://www.elastic.co/guide/en/elasticsearch/client/javascript-api/7.x/bulk_examples.html
+   * @param params
+   * @returns
+   */
+  bulk(params: {
+    index?: string;
+    method?: Method;
+    body?: any;
+    refresh?: boolean;
+  }): Promise<BulkInfo> {
+    const { index, method = "post", body, refresh } = params; // TODO use refesh
+    let path = "";
+    if (index != null) {
+      path = "/" + encodeURIComponent(index) + "/" + encodeURIComponent(type) +
+        "/" + "_bulk";
+    } else {
+      path = "/" + "_bulk";
+    }
+    return ajax<BulkInfo>({
+      url: path,
+      method,
+      data: serializer.ndserialize(body),
+      query: refresh !== undefined ? { refresh } : undefined,
     });
   }
 }

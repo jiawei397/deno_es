@@ -88,3 +88,22 @@ export interface DeletedInfo extends CreatedInfo {
 
 export interface DeleteByQueryInfo extends ReIndexInfo {
 }
+
+export interface BulkInfo {
+  took: number;
+  errors: boolean;
+  items: {
+    index: {
+      result: string;
+      _shards: any;
+      _seq_no: number;
+      _index: string;
+      forced_refresh: boolean;
+      _type: string;
+      _id: string;
+      _version: number;
+      _primary_term: number;
+      status: number;
+    };
+  }[];
+}

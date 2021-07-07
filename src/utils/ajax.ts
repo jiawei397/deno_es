@@ -95,6 +95,8 @@ export interface AjaxConfig extends AjaxExConfig {
   url: string;
   method: Method;
   data?: FormData | any;
+
+  query?: any;
 }
 
 type RequestCallback = (config: AjaxConfig) => AjaxConfig;
@@ -261,6 +263,7 @@ export class BaseAjax {
       url,
       baseURL, //接着的前缀url
       data,
+      query,
       headers = {},
       method,
       credentials,
@@ -276,6 +279,9 @@ export class BaseAjax {
       body = null; //get请求不能有body
       tempUrl = this.handleGetUrl(tempUrl, data, isEncodeUrl);
     } else {
+      if (query) {
+        tempUrl = this.handleGetUrl(tempUrl, query, isEncodeUrl);
+      }
       body = this.handlePostData(data, isFile);
       if (isFile) {
         if (!headers["Content-Type"]) {
