@@ -114,7 +114,7 @@ const reIndex = async () => {
 
 const stat = async () => {
   try {
-    const info = await client.indicesStats({
+    const info = await client.indices.stats({
       // index: "myindex",
     });
     console.log(info);
