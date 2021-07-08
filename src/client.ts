@@ -18,6 +18,7 @@ import {
   SearchInfo,
   SearchParams,
   UpdatedInfo,
+  UpdateParams,
 } from "./types.ts";
 import { Ajax, ajax, Method } from "./utils/ajax.ts";
 import { serializer } from "./utils/serializer.ts";
@@ -136,18 +137,19 @@ export class Client extends BaseClient {
     });
   }
 
-  update(params: {
-    index: string;
-    id: string | number;
-    body: any;
-    isOriginData?: boolean;
-  }): Promise<UpdatedInfo> {
+  /**
+   * update a document
+   * @see {@link https://www.elastic.co/guide/en/elasticsearch/client/javascript-api/7.x/api-reference.html#_update}
+   */
+  update(params: UpdateParams, options?: ExOptions): Promise<UpdatedInfo> {
     assert(this.conn);
     const {
       body,
       id,
       index,
       isOriginData,
+      timeout,
+      ...otherParams
     } = params;
     const path = "/" + encodeURIComponent(index) + "/" +
       encodeURIComponent(type) +
@@ -158,6 +160,9 @@ export class Client extends BaseClient {
       data: isOriginData ? body : {
         doc: body,
       },
+      timeout,
+      query: otherParams,
+      ignore: options?.ignore,
     });
   }
 
