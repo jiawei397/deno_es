@@ -6,6 +6,7 @@ import {
   CountInfo,
   CountParams,
   CreatedInfo,
+  CreateParams,
   DeleteByQueryInfo,
   DeleteByQueryParams,
   DeletedInfo,
@@ -105,18 +106,19 @@ export class Client extends BaseClient {
     });
   }
 
-  create(params: {
-    method?: Method;
-    body: any;
-    id: string | number;
-    index: string;
-  }): Promise<CreatedInfo> {
+  /**
+   * insert a document
+   * @see {@link https://www.elastic.co/guide/en/elasticsearch/client/javascript-api/7.x/api-reference.html#_create}
+   */
+  create(params: CreateParams, options?: ExOptions): Promise<CreatedInfo> {
     assert(this.conn);
     let {
       method = "PUT",
       body,
       id,
       index,
+      timeout,
+      ...otherParams
     } = params;
     if (!id) {
       id = generateId();
@@ -128,6 +130,9 @@ export class Client extends BaseClient {
       url: path,
       method,
       data: body,
+      timeout,
+      query: otherParams,
+      ignore: options?.ignore,
     });
   }
 

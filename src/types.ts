@@ -292,3 +292,17 @@ export type CountParams = {
   body?: object;
   method?: Method;
 } & Partial<ICountParams>;
+
+export interface CreateParams {
+  method?: Method;
+  id: string;
+  index: string;
+  body: object;
+  wait_for_active_shards?: string;
+  refresh?: "true" | "false" | "wait_for";
+  routing?: string;
+  timeout?: number;
+  version?: number;
+  version_type?: "internal" | "external" | "external_gte";
+  pipeline?: string;
+}
