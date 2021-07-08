@@ -240,3 +240,33 @@ export type DeleteByQueryParams = {
   index: string | string[];
   body: object;
 } & Partial<IDeleteByQueryParams>;
+
+export interface ExOptions {
+  ignore: number[];
+}
+
+export interface IndicesCreateParams {
+  index: string;
+  body: object;
+  method?: Method;
+  include_type_name?: boolean;
+  wait_for_active_shards?: string;
+  timeout?: number;
+  master_timeout?: number;
+}
+
+export interface IndicesStatsParams {
+  method?: Method;
+  timeout?: number;
+  index?: string | string[];
+  metric?: string | string[];
+  completion_fields?: string | string[];
+  fielddata_fields?: string | string[];
+  fields?: string | string[];
+  groups?: string | string[];
+  level?: "cluster" | "indices" | "shards";
+  include_segment_file_sizes?: boolean;
+  include_unloaded_segments?: boolean;
+  expand_wildcards?: "open" | "closed" | "hidden" | "none" | "all";
+  forbid_closed_indices?: boolean;
+}

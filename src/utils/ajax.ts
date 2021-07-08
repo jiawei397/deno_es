@@ -68,6 +68,8 @@ export interface RequestConfig {
   mode?: Mode;
 
   stoppedErrorMessage?: string;
+
+  ignore?: number[];
 }
 
 export interface AjaxExConfig extends RequestConfig {
@@ -270,6 +272,7 @@ export class BaseAjax {
       isFile,
       isUseOrigin,
       isEncodeUrl, //get请求时是否要进行浏览器编码
+      ignore,
       ...otherParams
     } = config;
 
@@ -302,6 +305,9 @@ export class BaseAjax {
         ...otherParams,
       });
       if (!response.ok) { //代表网络请求失败，原因可能是token失效，这时需要跳转到登陆页
+        if (Array.isArray(ignore) && ignore.includes(response.status)) {
+          return null;
+        }
         this.handleErrorResponse(response);
         return Promise.reject(response);
       }
