@@ -20,11 +20,11 @@ import {
   UpdatedInfo,
   UpdateParams,
 } from "./types.ts";
-import { Ajax, ajax, Method } from "./utils/ajax.ts";
+import { Ajax, ajax } from "./utils/ajax.ts";
 import { serializer } from "./utils/serializer.ts";
 import { generateId } from "./utils/tools.ts";
 
-const DENO_DRIVER_VERSION = "0.0.6";
+const DENO_DRIVER_VERSION = "0.0.7";
 
 const type = "_doc";
 
