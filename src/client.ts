@@ -11,6 +11,7 @@ import {
   ReIndexInfo,
   ReIndexParams,
   SearchInfo,
+  SearchParams,
   UpdatedInfo,
 } from "./types.ts";
 import { Ajax, ajax, Method } from "./utils/ajax.ts";
@@ -231,13 +232,12 @@ export class Client extends BaseClient {
     return Object.keys(result.indices);
   }
 
-  search(params: {
-    index?: string;
-    method?: Method;
-    body?: any;
-  }): Promise<SearchInfo> {
+  /**
+   * https://www.elastic.co/guide/en/elasticsearch/client/javascript-api/7.x/api-reference.html#_search
+   */
+  search(params: SearchParams): Promise<SearchInfo> {
     assert(this.conn);
-    let { index, method, body } = params;
+    let { index, method, body, timeout, ...otherParams } = params;
     let path = "";
     if ((index) != null) {
       if (method == null) method = body == null ? "GET" : "POST";
@@ -250,6 +250,8 @@ export class Client extends BaseClient {
       url: path,
       method,
       data: body,
+      timeout,
+      query: otherParams,
     });
   }
 

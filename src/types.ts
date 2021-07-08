@@ -138,3 +138,52 @@ export interface ReIndexParams {
   max_docs?: number;
   body?: object;
 }
+
+export interface SearchParams {
+  method?: Method;
+  index: string;
+  analyzer?: string;
+  analyze_wildcard?: boolean;
+  ccs_minimize_roundtrips?: boolean;
+  default_operator?: "AND" | "OR";
+  df?: string;
+  explain?: boolean;
+  stored_fields?: string | string[];
+  docvalue_fields?: string | string[];
+  from?: number;
+  ignore_unavailable?: boolean;
+  ignore_throttled?: boolean;
+  allow_no_indices?: boolean;
+  expand_wildcards?: "open" | "closed" | "hidden" | "none" | "all";
+  lenient?: boolean;
+  preference?: string;
+  q?: string;
+  routing?: string | string[];
+  scroll?: string;
+  search_type?: "query_then_fetch" | "dfs_query_then_fetch";
+  size?: number;
+  sort?: string | string[];
+  _source?: string | string[];
+  _source_excludes?: string | string[];
+  _source_includes?: string | string[];
+  terminate_after?: number;
+  stats?: string | string[];
+  suggest_field?: string;
+  suggest_mode?: "missing" | "popular" | "always";
+  suggest_size?: number;
+  suggest_text?: string;
+  timeout?: number;
+  track_scores?: boolean;
+  track_total_hits?: boolean;
+  allow_partial_search_results?: boolean;
+  typed_keys?: boolean;
+  version?: boolean;
+  seq_no_primary_term?: boolean;
+  request_cache?: boolean;
+  batched_reduce_size?: number;
+  max_concurrent_shard_requests?: number;
+  pre_filter_shard_size?: number;
+  rest_total_hits_as_int?: boolean;
+  min_compatible_shard_node?: string;
+  body: object;
+}
