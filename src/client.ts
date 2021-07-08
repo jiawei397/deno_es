@@ -9,6 +9,7 @@ import {
   DeletedInfo,
   DeleteIndexInfo,
   ReIndexInfo,
+  ReIndexParams,
   SearchInfo,
   UpdatedInfo,
 } from "./types.ts";
@@ -16,7 +17,7 @@ import { Ajax, ajax, Method } from "./utils/ajax.ts";
 import { serializer } from "./utils/serializer.ts";
 import { generateId } from "./utils/tools.ts";
 
-const DENO_DRIVER_VERSION = "0.0.3";
+const DENO_DRIVER_VERSION = "0.0.6";
 
 const type = "_doc";
 
@@ -196,19 +197,22 @@ export class Client extends BaseClient {
     });
   }
 
-  reindex(params: {
-    oldIndex: string | number;
-    newIndex: string | number;
-  }): Promise<ReIndexInfo> {
+  /**
+   * The reindex API extracts the document source from the source index and indexes the documents into the destination index. You can copy all documents to the destination index, reindex a subset of the documents or update the source before to reindex it.
+   */
+  reindex(params: ReIndexParams): Promise<ReIndexInfo> {
     assert(this.conn);
     const {
       oldIndex,
       newIndex,
+      timeout,
+      ...otherParams
     } = params;
     const path = "/" + "_reindex";
     return ajax<ReIndexInfo>({
       url: path,
       method: "POST",
+      timeout,
       data: {
         source: {
           index: oldIndex,
@@ -217,6 +221,7 @@ export class Client extends BaseClient {
           index: newIndex,
         },
       },
+      query: otherParams,
     });
   }
 
@@ -255,7 +260,7 @@ export class Client extends BaseClient {
    */
   bulk(params: BulkParams): Promise<BulkInfo> {
     assert(this.conn);
-    const { index, method = "post", body, ...otherParams } = params;
+    const { index, method = "post", body, timeout, ...otherParams } = params;
     let path = "";
     if (index != null) {
       path = "/" + encodeURIComponent(index) + "/" + encodeURIComponent(type) +
@@ -267,6 +272,7 @@ export class Client extends BaseClient {
       url: path,
       method,
       data: serializer.ndserialize(body),
+      timeout,
       query: otherParams,
     });
   }

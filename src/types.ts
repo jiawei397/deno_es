@@ -117,10 +117,24 @@ export interface BulkParams {
   wait_for_active_shards?: string;
   refresh?: boolean | "wait_for";
   routing?: string;
-  timeout?: string;
+  timeout?: number;
   _source?: string | string[];
   _source_excludes?: string | string[];
   _source_includes?: string | string[];
   pipeline?: string;
   require_alias?: boolean;
+}
+
+export interface ReIndexParams {
+  oldIndex: string | number;
+  newIndex: string | number;
+  refresh?: boolean;
+  timeout?: number;
+  wait_for_active_shards?: string;
+  wait_for_completion?: boolean;
+  requests_per_second?: number;
+  scroll?: string;
+  slices?: number | string;
+  max_docs?: number;
+  body?: object;
 }
