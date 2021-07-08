@@ -158,7 +158,7 @@ export class Client extends BaseClient {
 
   /**
    * delete
-   * https://www.elastic.co/guide/en/elasticsearch/client/javascript-api/7.x/api-reference.html#_delete
+   * @see {@link https://www.elastic.co/guide/en/elasticsearch/client/javascript-api/7.x/api-reference.html#_delete}
    */
   delete(params: DeleteParams): Promise<DeletedInfo> {
     assert(this.conn);
@@ -199,7 +199,8 @@ export class Client extends BaseClient {
       timeout,
       ...otherParams
     } = params;
-    const path = "/" + encodeURIComponent(index) + "/" + "_delete_by_query";
+    const path = "/" + encodeURIComponent(index.toString()) + "/" +
+      "_delete_by_query";
     return ajax<DeleteByQueryInfo>({
       url: path,
       method: "POST",
@@ -253,7 +254,7 @@ export class Client extends BaseClient {
   }
 
   /**
-   * https://www.elastic.co/guide/en/elasticsearch/client/javascript-api/7.x/api-reference.html#_search
+   * @see {@link https://www.elastic.co/guide/en/elasticsearch/client/javascript-api/7.x/api-reference.html#_search}
    */
   search(params: SearchParams): Promise<SearchInfo> {
     assert(this.conn);
@@ -277,8 +278,8 @@ export class Client extends BaseClient {
 
   /**
    * Performs multiple indexing or delete operations in a single API call. This reduces overhead and can greatly increase indexing speed.
-   * https://www.elastic.co/guide/en/elasticsearch/client/javascript-api/7.x/bulk_examples.html
-   * https://www.elastic.co/guide/en/elasticsearch/client/javascript-api/7.x/api-reference.html#_bulk
+   * @see {@link https://www.elastic.co/guide/en/elasticsearch/client/javascript-api/7.x/bulk_examples.html}
+   * @see {@link https://www.elastic.co/guide/en/elasticsearch/client/javascript-api/7.x/api-reference.html#_bulk}
    */
   bulk(params: BulkParams): Promise<BulkInfo> {
     assert(this.conn);
