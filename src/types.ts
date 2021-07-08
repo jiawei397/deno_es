@@ -200,3 +200,43 @@ export interface DeleteParams {
   version?: number;
   version_type?: "internal" | "external" | "external_gte" | "force";
 }
+
+interface IDeleteByQueryParams {
+  analyzer: string;
+  analyze_wildcard: boolean;
+  default_operator: "AND" | "OR";
+  df: string;
+  from: number;
+  ignore_unavailable: boolean;
+  allow_no_indices: boolean;
+  conflicts: "abort" | "proceed";
+  expand_wildcards: "open" | "closed" | "hidden" | "none" | "all";
+  lenient: boolean;
+  preference: string;
+  q: string;
+  routing: string | string[];
+  scroll: string;
+  search_type: "query_then_fetch" | "dfs_query_then_fetch";
+  search_timeout: string;
+  size: number;
+  max_docs: number;
+  sort: string | string[];
+  _source: string | string[];
+  _source_excludes: string | string[];
+  _source_includes: string | string[];
+  terminate_after: number;
+  stats: string | string[];
+  version: boolean;
+  request_cache: boolean;
+  refresh: boolean;
+  timeout: num;
+  wait_for_active_shards: string;
+  scroll_size: number;
+  wait_for_completion: boolean;
+  requests_per_second: number;
+  slices: number | string;
+}
+export type DeleteByQueryParams = {
+  index: string | string[];
+  body: object;
+} & Partial<IDeleteByQueryParams>;

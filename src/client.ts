@@ -6,6 +6,7 @@ import {
   CountInfo,
   CreatedInfo,
   DeleteByQueryInfo,
+  DeleteByQueryParams,
   DeletedInfo,
   DeleteIndexInfo,
   DeleteParams,
@@ -178,20 +179,33 @@ export class Client extends BaseClient {
     });
   }
 
-  deleteByQuery(params: {
-    index: string;
-    body: any;
-  }): Promise<DeleteByQueryInfo> {
+  /**
+   * Deletes documents that match the specified query.
+   * @example
+   * {
+   *   "query": {
+   *     "match": {
+   *        "user.id": "elkbee"
+   *      }
+   *    }
+   *  }
+   * @see {@link https://www.elastic.co/guide/en/elasticsearch/client/javascript-api/7.x/api-reference.html#_deletebyquery}
+   */
+  deleteByQuery(params: DeleteByQueryParams): Promise<DeleteByQueryInfo> {
     assert(this.conn);
     const {
       index,
       body,
+      timeout,
+      ...otherParams
     } = params;
     const path = "/" + encodeURIComponent(index) + "/" + "_delete_by_query";
     return ajax<DeleteByQueryInfo>({
       url: path,
       method: "POST",
       data: body,
+      timeout,
+      query: otherParams,
     });
   }
 
