@@ -270,3 +270,25 @@ export interface IndicesStatsParams {
   expand_wildcards?: "open" | "closed" | "hidden" | "none" | "all";
   forbid_closed_indices?: boolean;
 }
+
+interface ICountParams {
+  ignore_unavailable: boolean;
+  ignore_throttled: boolean;
+  allow_no_indices: boolean;
+  expand_wildcards: "open" | "closed" | "hidden" | "none" | "all";
+  min_score: number;
+  preference: string;
+  routing: string | string[];
+  q: string;
+  analyzer: string;
+  analyze_wildcard: boolean;
+  default_operator: "AND" | "OR";
+  df: string;
+  lenient: boolean;
+  terminate_after: number;
+}
+export type CountParams = {
+  index: string | string[];
+  body?: object;
+  method?: Method;
+} & Partial<ICountParams>;

@@ -4,12 +4,14 @@ import {
   BulkInfo,
   BulkParams,
   CountInfo,
+  CountParams,
   CreatedInfo,
   DeleteByQueryInfo,
   DeleteByQueryParams,
   DeletedInfo,
   DeleteIndexInfo,
   DeleteParams,
+  ExOptions,
   ReIndexInfo,
   ReIndexParams,
   SearchInfo,
@@ -81,19 +83,15 @@ class BaseClient {
 export class Client extends BaseClient {
   indices = new Indices();
 
-  count(options: {
-    method?: Method;
-    body?: string;
-    index: string;
-  }): Promise<CountInfo> {
+  count(params: CountParams, options?: ExOptions): Promise<CountInfo> {
     assert(this.conn);
     let path = "";
 
-    let { index, body, method } = options;
+    let { index, body, method, ...otherParams } = params;
 
     if (index != null) {
       if (method == null) method = body == null ? "GET" : "POST";
-      path = "/" + encodeURIComponent(index) + "/" + "_count";
+      path = "/" + encodeURIComponent(index.toString()) + "/" + "_count";
     } else {
       if (method == null) method = body == null ? "GET" : "POST";
       path = "/" + "_count";
@@ -102,6 +100,8 @@ export class Client extends BaseClient {
       url: path,
       method: method!,
       data: body,
+      query: otherParams,
+      ignore: options?.ignore,
     });
   }
 
