@@ -1,3 +1,5 @@
+import { Method } from "./utils/ajax.ts";
+
 export interface StatInfo {
   _shards: {
     total: number;
@@ -106,4 +108,19 @@ export interface BulkInfo {
       status: number;
     };
   }[];
+}
+
+export interface BulkParams {
+  index?: string;
+  method?: Method;
+  body?: object;
+  wait_for_active_shards?: string;
+  refresh?: boolean | "wait_for";
+  routing?: string;
+  timeout?: string;
+  _source?: string | string[];
+  _source_excludes?: string | string[];
+  _source_includes?: string | string[];
+  pipeline?: string;
+  require_alias?: boolean;
 }

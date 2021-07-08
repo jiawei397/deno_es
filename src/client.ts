@@ -2,6 +2,7 @@ import { assert, urlParse } from "../deps.ts";
 import { Indices } from "./indices.ts";
 import {
   BulkInfo,
+  BulkParams,
   CountInfo,
   CreatedInfo,
   DeleteByQueryInfo,
@@ -248,16 +249,13 @@ export class Client extends BaseClient {
   }
 
   /**
+   * Performs multiple indexing or delete operations in a single API call. This reduces overhead and can greatly increase indexing speed.
    * https://www.elastic.co/guide/en/elasticsearch/client/javascript-api/7.x/bulk_examples.html
+   * https://www.elastic.co/guide/en/elasticsearch/client/javascript-api/7.x/api-reference.html#_bulk
    */
-  bulk(params: {
-    index?: string;
-    method?: Method;
-    body?: any;
-    refresh?: boolean;
-  }): Promise<BulkInfo> {
+  bulk(params: BulkParams): Promise<BulkInfo> {
     assert(this.conn);
-    const { index, method = "post", body, refresh } = params; // TODO use refesh
+    const { index, method = "post", body, ...otherParams } = params;
     let path = "";
     if (index != null) {
       path = "/" + encodeURIComponent(index) + "/" + encodeURIComponent(type) +
@@ -269,7 +267,7 @@ export class Client extends BaseClient {
       url: path,
       method,
       data: serializer.ndserialize(body),
-      query: refresh !== undefined ? { refresh } : undefined,
+      query: otherParams,
     });
   }
 }
