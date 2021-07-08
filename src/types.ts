@@ -187,3 +187,16 @@ export interface SearchParams {
   min_compatible_shard_node?: string;
   body: object;
 }
+
+export interface DeleteParams {
+  id: string | number;
+  index: string;
+  wait_for_active_shards?: string;
+  refresh?: "true" | "false" | "wait_for";
+  routing?: string;
+  timeout?: number;
+  if_seq_no?: number;
+  if_primary_term?: number;
+  version?: number;
+  version_type?: "internal" | "external" | "external_gte" | "force";
+}

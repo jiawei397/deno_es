@@ -8,6 +8,7 @@ import {
   DeleteByQueryInfo,
   DeletedInfo,
   DeleteIndexInfo,
+  DeleteParams,
   ReIndexInfo,
   ReIndexParams,
   SearchInfo,
@@ -154,14 +155,17 @@ export class Client extends BaseClient {
     });
   }
 
-  delete(params: {
-    index: string;
-    id: string | number;
-  }): Promise<DeletedInfo> {
+  /**
+   * delete
+   * https://www.elastic.co/guide/en/elasticsearch/client/javascript-api/7.x/api-reference.html#_delete
+   */
+  delete(params: DeleteParams): Promise<DeletedInfo> {
     assert(this.conn);
     const {
       id,
       index,
+      timeout,
+      ...otherParams
     } = params;
     const path = "/" + encodeURIComponent(index) + "/" +
       encodeURIComponent(type) +
@@ -169,6 +173,8 @@ export class Client extends BaseClient {
     return ajax<DeletedInfo>({
       url: path,
       method: "DELETE",
+      timeout,
+      query: otherParams,
     });
   }
 
