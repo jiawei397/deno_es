@@ -229,7 +229,7 @@ interface IDeleteByQueryParams {
   version: boolean;
   request_cache: boolean;
   refresh: boolean;
-  timeout: num;
+  timeout: number;
   wait_for_active_shards: string;
   scroll_size: number;
   wait_for_completion: boolean;
