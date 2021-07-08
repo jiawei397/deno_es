@@ -222,10 +222,8 @@ export class Client extends BaseClient {
 
   deleteByIndex(index: string): Promise<DeleteIndexInfo> {
     assert(this.conn);
-    const path = "/" + encodeURIComponent(index);
-    return ajax<DeleteIndexInfo>({
-      url: path,
-      method: "delete",
+    return this.indices.delete({
+      index,
     });
   }
 

@@ -1,4 +1,6 @@
 import {
+  DeleteIndexInfo,
+  DeleteIndexParams,
   ExOptions,
   IndicesCreateParams,
   IndicesStatsParams,
@@ -46,6 +48,25 @@ export class Indices {
       method,
       timeout,
       query: otherParams,
+      ignore: options?.ignore,
+    });
+  }
+
+  /**
+   * delete by index
+   * @see {@link https://www.elastic.co/guide/en/elasticsearch/client/javascript-api/7.x/api-reference.html#_indices_delete}
+   */
+  delete(
+    params: DeleteIndexParams,
+    options?: ExOptions,
+  ): Promise<DeleteIndexInfo> {
+    const { index, timeout, ...otherParams } = params;
+    const path = "/" + encodeURIComponent(index.toString());
+    return ajax<DeleteIndexInfo>({
+      url: path,
+      method: "delete",
+      query: otherParams,
+      timeout,
       ignore: options?.ignore,
     });
   }

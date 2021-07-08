@@ -328,3 +328,12 @@ export type UpdateParams = {
   body: object;
   isOriginData?: boolean;
 } & Partial<IUpdateParams>;
+
+export interface DeleteIndexParams {
+  index: string | string[];
+  timeout?: number;
+  master_timeout?: number;
+  ignore_unavailable?: boolean;
+  allow_no_indices?: boolean;
+  expand_wildcards?: "open" | "closed" | "hidden" | "none" | "all";
+}
