@@ -19,7 +19,7 @@ const DENO_DRIVER_VERSION = "0.0.3";
 
 const type = "_doc";
 
-export class Client {
+class BaseClient {
   // cache db
   #dbCache = new Map();
 
@@ -27,11 +27,9 @@ export class Client {
 
   db: string | undefined;
 
-  private conn: Deno.Conn | undefined;
+  protected conn: Deno.Conn | undefined;
 
   connectedCount = 0;
-
-  indices = new Indices();
 
   private connectDB(db: string) {
     this.db = db;
@@ -73,6 +71,10 @@ export class Client {
   get version() {
     return DENO_DRIVER_VERSION;
   }
+}
+
+export class Client extends BaseClient {
+  indices = new Indices();
 
   count(options: {
     method?: Method;
@@ -104,6 +106,7 @@ export class Client {
     id: string | number;
     index: string;
   }): Promise<CreatedInfo> {
+    assert(this.conn);
     let {
       method = "PUT",
       body,
@@ -129,6 +132,7 @@ export class Client {
     body: any;
     isOriginData?: boolean;
   }): Promise<UpdatedInfo> {
+    assert(this.conn);
     const {
       body,
       id,
@@ -151,6 +155,7 @@ export class Client {
     index: string;
     id: string | number;
   }): Promise<DeletedInfo> {
+    assert(this.conn);
     const {
       id,
       index,
@@ -168,6 +173,7 @@ export class Client {
     index: string;
     body: any;
   }): Promise<DeleteByQueryInfo> {
+    assert(this.conn);
     const {
       index,
       body,
@@ -181,6 +187,7 @@ export class Client {
   }
 
   deleteByIndex(index: string): Promise<DeleteIndexInfo> {
+    assert(this.conn);
     const path = "/" + encodeURIComponent(index);
     return ajax<DeleteIndexInfo>({
       url: path,
@@ -192,6 +199,7 @@ export class Client {
     oldIndex: string | number;
     newIndex: string | number;
   }): Promise<ReIndexInfo> {
+    assert(this.conn);
     const {
       oldIndex,
       newIndex,
@@ -212,6 +220,7 @@ export class Client {
   }
 
   async getAllIndices(): Promise<string[]> {
+    assert(this.conn);
     const result = await this.indices.stats({});
     return Object.keys(result.indices);
   }
@@ -221,6 +230,7 @@ export class Client {
     method?: Method;
     body?: any;
   }): Promise<SearchInfo> {
+    assert(this.conn);
     let { index, method, body } = params;
     let path = "";
     if ((index) != null) {
@@ -239,8 +249,6 @@ export class Client {
 
   /**
    * https://www.elastic.co/guide/en/elasticsearch/client/javascript-api/7.x/bulk_examples.html
-   * @param params
-   * @returns
    */
   bulk(params: {
     index?: string;
@@ -248,6 +256,7 @@ export class Client {
     body?: any;
     refresh?: boolean;
   }): Promise<BulkInfo> {
+    assert(this.conn);
     const { index, method = "post", body, refresh } = params; // TODO use refesh
     let path = "";
     if (index != null) {
