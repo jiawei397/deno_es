@@ -1,4 +1,4 @@
-import { Method } from "./utils/ajax.ts";
+import { Method } from "../deps.ts";
 
 export interface StatInfo {
   _shards: {

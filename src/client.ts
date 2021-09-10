@@ -1,4 +1,4 @@
-import { assert, urlParse } from "../deps.ts";
+import { assert } from "../deps.ts";
 import { Indices } from "./indices.ts";
 import {
   BulkInfo,
@@ -24,7 +24,7 @@ import { Ajax, ajax } from "./utils/ajax.ts";
 import { serializer } from "./utils/serializer.ts";
 import { generateId } from "./utils/tools.ts";
 
-const DENO_DRIVER_VERSION = "0.0.7";
+const VERSION = "0.0.8";
 
 const type = "_doc";
 
@@ -36,19 +36,19 @@ class BaseClient {
 
   db: string | undefined;
 
-  protected conn: Deno.Conn | undefined;
-
   connectedCount = 0;
+
+  connected = false;
 
   private connectDB(db: string) {
     this.db = db;
     Ajax.defaults.baseURL = db;
-    const options = urlParse(db);
-    return Deno.connect({
-      hostname: options.hostname,
-      port: Number(options.port),
-    }).then((conn) => {
-      this.conn = conn;
+    return fetch(db).then((res) => {
+      if (res.ok) {
+        this.connected = true;
+        return res.json();
+      }
+      return Promise.reject(res.json());
     });
   }
 
@@ -69,16 +69,13 @@ class BaseClient {
   }
 
   close() {
-    if (this.conn) {
-      this.conn.close();
-    }
     this.#dbCache.clear();
     this.#connectionCache.clear();
     this.connectedCount = 0;
   }
 
   get version() {
-    return DENO_DRIVER_VERSION;
+    return VERSION;
   }
 }
 
@@ -86,7 +83,7 @@ export class Client extends BaseClient {
   indices = new Indices();
 
   count(params: CountParams, options?: ExOptions): Promise<CountInfo> {
-    assert(this.conn);
+    assert(this.connected);
     let path = "";
 
     let { index, body, method, ...otherParams } = params;
@@ -102,7 +99,7 @@ export class Client extends BaseClient {
       url: path,
       method: method!,
       data: body,
-      query: otherParams,
+      query: otherParams as any,
       ignore: options?.ignore,
     });
   }
@@ -112,7 +109,7 @@ export class Client extends BaseClient {
    * @see {@link https://www.elastic.co/guide/en/elasticsearch/client/javascript-api/7.x/api-reference.html#_create}
    */
   create(params: CreateParams, options?: ExOptions): Promise<CreatedInfo> {
-    assert(this.conn);
+    assert(this.connected);
     let {
       method = "PUT",
       body,
@@ -132,7 +129,7 @@ export class Client extends BaseClient {
       method,
       data: body,
       timeout,
-      query: otherParams,
+      query: otherParams as any,
       ignore: options?.ignore,
     });
   }
@@ -142,7 +139,7 @@ export class Client extends BaseClient {
    * @see {@link https://www.elastic.co/guide/en/elasticsearch/client/javascript-api/7.x/api-reference.html#_update}
    */
   update(params: UpdateParams, options?: ExOptions): Promise<UpdatedInfo> {
-    assert(this.conn);
+    assert(this.connected);
     const {
       body,
       id,
@@ -161,7 +158,7 @@ export class Client extends BaseClient {
         doc: body,
       },
       timeout,
-      query: otherParams,
+      query: otherParams as any,
       ignore: options?.ignore,
     });
   }
@@ -171,7 +168,7 @@ export class Client extends BaseClient {
    * @see {@link https://www.elastic.co/guide/en/elasticsearch/client/javascript-api/7.x/api-reference.html#_delete}
    */
   delete(params: DeleteParams): Promise<DeletedInfo> {
-    assert(this.conn);
+    assert(this.connected);
     const {
       id,
       index,
@@ -185,7 +182,7 @@ export class Client extends BaseClient {
       url: path,
       method: "DELETE",
       timeout,
-      query: otherParams,
+      query: otherParams as any,
     });
   }
 
@@ -202,7 +199,7 @@ export class Client extends BaseClient {
    * @see {@link https://www.elastic.co/guide/en/elasticsearch/client/javascript-api/7.x/api-reference.html#_deletebyquery}
    */
   deleteByQuery(params: DeleteByQueryParams): Promise<DeleteByQueryInfo> {
-    assert(this.conn);
+    assert(this.connected);
     const {
       index,
       body,
@@ -216,12 +213,12 @@ export class Client extends BaseClient {
       method: "POST",
       data: body,
       timeout,
-      query: otherParams,
+      query: otherParams as any,
     });
   }
 
   deleteByIndex(index: string): Promise<DeleteIndexInfo> {
-    assert(this.conn);
+    assert(this.connected);
     return this.indices.delete({
       index,
     });
@@ -231,7 +228,7 @@ export class Client extends BaseClient {
    * The reindex API extracts the document source from the source index and indexes the documents into the destination index. You can copy all documents to the destination index, reindex a subset of the documents or update the source before to reindex it.
    */
   reindex(params: ReIndexParams): Promise<ReIndexInfo> {
-    assert(this.conn);
+    assert(this.connected);
     const {
       oldIndex,
       newIndex,
@@ -251,21 +248,22 @@ export class Client extends BaseClient {
           index: newIndex,
         },
       },
-      query: otherParams,
+      query: otherParams as any,
     });
   }
 
   async getAllIndices(): Promise<string[]> {
-    assert(this.conn);
+    assert(this.connected);
     const result = await this.indices.stats({});
     return Object.keys(result.indices);
   }
 
   /**
+   * search
    * @see {@link https://www.elastic.co/guide/en/elasticsearch/client/javascript-api/7.x/api-reference.html#_search}
    */
   search(params: SearchParams): Promise<SearchInfo> {
-    assert(this.conn);
+    assert(this.connected);
     let { index, method, body, timeout, ...otherParams } = params;
     let path = "";
     if ((index) != null) {
@@ -280,7 +278,7 @@ export class Client extends BaseClient {
       method,
       data: body,
       timeout,
-      query: otherParams,
+      query: otherParams as any,
     });
   }
 
@@ -290,7 +288,7 @@ export class Client extends BaseClient {
    * @see {@link https://www.elastic.co/guide/en/elasticsearch/client/javascript-api/7.x/api-reference.html#_bulk}
    */
   bulk(params: BulkParams): Promise<BulkInfo> {
-    assert(this.conn);
+    assert(this.connected);
     const { index, method = "post", body, timeout, ...otherParams } = params;
     let path = "";
     if (index != null) {
@@ -304,7 +302,7 @@ export class Client extends BaseClient {
       method,
       data: serializer.ndserialize(body),
       timeout,
-      query: otherParams,
+      query: otherParams as any,
     });
   }
 }

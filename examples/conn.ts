@@ -5,7 +5,7 @@ import { delay } from "../deps.ts";
 import { limit } from "../src/utils/task.ts";
 
 const client = new Client();
-await client.connect("http://localhost:9200/");
+await client.connect("http://elastic:369258@192.168.21.176:9200");
 
 const count = async () => {
   try {
@@ -168,11 +168,11 @@ const search = async () => {
 // await getAllIndices();
 
 // await deleteById();
-await deleteByQuery();
+// await deleteByQuery();
 
 // setTimeout(async () => {
 //   await create();
 // }, 1000);
 // console.timeEnd("ajax");
 
-// await search();
+await search();
