@@ -24,8 +24,6 @@ import { Ajax, ajax } from "./utils/ajax.ts";
 import { serializer } from "./utils/serializer.ts";
 import { generateId } from "./utils/tools.ts";
 
-const VERSION = "0.0.8";
-
 const type = "_doc";
 
 class BaseClient {
@@ -72,10 +70,6 @@ class BaseClient {
     this.#dbCache.clear();
     this.#connectionCache.clear();
     this.connectedCount = 0;
-  }
-
-  get version() {
-    return VERSION;
   }
 }
 

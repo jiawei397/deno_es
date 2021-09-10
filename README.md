@@ -12,6 +12,7 @@ import { delay } from "../deps.ts";
 import { limit } from "../src/utils/task.ts";
 
 const client = new Client();
+// await client.connect("http://elastic:pwd@localhost:9200/"); // with password
 await client.connect("http://localhost:9200/");
 
 const count = async () => {
