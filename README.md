@@ -29,10 +29,10 @@ const count = async () => {
 
 const create = async () => {
   try {
-    const id = v4.generate();
+    // const id = v4.generate();
     const info = await client.create({
       index: "myindex",
-      id,
+      // id,
       body: Mock.mock({
         "email": "@EMAIL",
         "name": "@NAME",

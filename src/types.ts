@@ -295,7 +295,7 @@ export type CountParams = {
 
 export interface CreateParams {
   method?: Method;
-  id: string;
+  id?: string;
   index: string;
   body: object;
   wait_for_active_shards?: string;

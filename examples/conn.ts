@@ -21,18 +21,18 @@ const count = async () => {
 
 const create = async () => {
   try {
-    const id = v4.generate();
+    // const id = v4.generate();
     const info = await client.create({
       index: "myindex",
-      id,
+      // id,
       body: Mock.mock({
         "email": "@EMAIL",
         "name": "@NAME",
       }),
     });
-    console.log(info);
+    console.log("create success", info);
   } catch (error) {
-    console.error(error);
+    console.error("create error", error);
   }
 };
 
@@ -40,7 +40,7 @@ const update = async () => {
   try {
     const info = await client.update({
       index: "myindex",
-      id: 1,
+      id: '6a1194e3-b8af-4f7b-9db2-f67c169b1860',
       body: Mock.mock({
         "email": "@EMAIL",
         "name": "@NAME",
@@ -56,11 +56,11 @@ const deleteById = async () => {
   try {
     const info = await client.delete({
       index: "myindex",
-      id: 1,
+      id: "hpes8XoBelbYB1VUf9YJ",
     });
-    console.log(info);
+    console.log("deleteById result", info);
   } catch (error) {
-    console.error(error);
+    console.error("deleteById", error);
   }
 };
 
@@ -81,7 +81,7 @@ const deleteByQuery = async () => {
         query: {
           "bool": {
             "must": [{
-              "query_string": { "default_field": "email", "query": "@EMAIL" },
+              "query_string": { "default_field": "userId", "query": "41" },
             }],
           },
         },
@@ -157,7 +157,7 @@ const search = async () => {
 // await Promise.all(Array.from(new Array(100)).map(command));
 // await Promise.all(Array.from(new Array(10000)).map(count));
 
-// await create();
+await create();
 // await count();
 // await update();
 // await reIndex();
@@ -175,4 +175,4 @@ const search = async () => {
 // }, 1000);
 // console.timeEnd("ajax");
 
-await search();
+// await search();
