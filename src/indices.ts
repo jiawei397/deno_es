@@ -3,6 +3,7 @@ import {
   DeleteIndexParams,
   ExOptions,
   IndicesCreateParams,
+  IndicesCreateResult,
   IndicesStatsParams,
   StatInfo,
 } from "./types.ts";
@@ -12,7 +13,7 @@ export class Indices {
   create(params: IndicesCreateParams, options?: ExOptions) {
     const { index, method = "put", body, timeout, ...otherParams } = params;
     const path = "/" + encodeURIComponent(index);
-    return ajax<StatInfo>({
+    return ajax<IndicesCreateResult>({
       url: path,
       method,
       data: body,

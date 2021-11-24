@@ -37,6 +37,30 @@ const create = async () => {
   }
 };
 
+const createIndex = async () => {
+  try {
+    const info = await client.indices.create({
+      index: "myindex2",
+      // body: {},
+      body: {
+        "mappings": {
+          "properties": {
+            "message": {
+              "type": "text",
+            },
+            "query": {
+              "type": "percolator",
+            },
+          },
+        },
+      },
+    });
+    console.log("createIndex success", info);
+  } catch (error) {
+    console.error("createIndex error", error);
+  }
+};
+
 const update = async () => {
   try {
     const info = await client.update({
@@ -109,7 +133,7 @@ const reIndex = async () => {
 const stat = async () => {
   try {
     const info = await client.indices.stats({
-      // index: "myindex",
+      index: "myindex111",
     });
     console.log(info);
   } catch (error) {
@@ -159,8 +183,9 @@ const search = async () => {
 // await Promise.all(Array.from(new Array(10000)).map(count));
 
 // await create();
-await count();
+// await count();
 // await update();
+await createIndex();
 // await reIndex();
 // await deleteByIndex();
 

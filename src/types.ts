@@ -256,6 +256,12 @@ export interface IndicesCreateParams {
   master_timeout?: number;
 }
 
+export interface IndicesCreateResult {
+  acknowledged: boolean;
+  shards_acknowledged: boolean;
+  index: string;
+}
+
 export interface IndicesStatsParams {
   method?: Method;
   timeout?: number;
