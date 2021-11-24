@@ -5,7 +5,7 @@
 ## Examples
 
 ```ts
-import { Client } from "https://deno.land/x/deno_es/mod.ts";
+import { Client } from "https://deno.land/x/deno_es@v0.1.1/mod.ts";
 import { v4 } from "https://deno.land/std@0.99.0/uuid/mod.ts";
 import Mock from "https://deno.land/x/deno_mock@v2.0.0/mod.ts";
 import { delay } from "../deps.ts";
@@ -67,6 +67,30 @@ const deleteById = async () => {
       id: 1,
     });
     console.log(info);
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+const createIndex = async () => {
+  try {
+    const info = await client.indices.create({
+      index: "myindex",
+      // body: {},
+      body: {
+        "mappings": {
+          "properties": {
+            "message": {
+              "type": "text",
+            },
+            "query": {
+              "type": "percolator",
+            },
+          },
+        },
+      },
+    });
+    console.log("createIndex success", info);
   } catch (error) {
     console.error(error);
   }
