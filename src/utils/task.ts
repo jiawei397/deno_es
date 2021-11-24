@@ -1,3 +1,4 @@
+// deno-lint-ignore-file no-explicit-any
 // 限流
 
 type TaskCallback = (arg: any) => any;

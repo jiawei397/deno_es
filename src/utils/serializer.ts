@@ -1,12 +1,14 @@
+// deno-lint-ignore-file no-explicit-any
 import { SerializationError } from "./errors.ts";
 
 interface SerializerOptions {
   disablePrototypePoisoningProtection: boolean | "proto" | "constructor";
 }
 
-const kJsonOptions = Symbol("secure json parse options");
+// const kJsonOptions = Symbol("secure json parse options");
 
 export class Serializer {
+  // deno-lint-ignore no-unused-vars
   constructor(opts: SerializerOptions) {
     // const disable = opts.disablePrototypePoisoningProtection;
     // this[kJsonOptions] = {

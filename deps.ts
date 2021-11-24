@@ -7,8 +7,8 @@ export {
 export { urlParse } from "https://deno.land/x/url_parse@1.0.0/mod.ts";
 export { v4 } from "https://deno.land/std@0.99.0/uuid/mod.ts";
 export { delay } from "https://deno.land/std@0.99.0/async/delay.ts";
-export { BaseAjax } from "https://deno.land/x/jw_fetch@v0.1.4/mod.ts";
+export { BaseAjax } from "https://deno.land/x/jw_fetch@v0.1.19/mod.ts";
 export type {
   AjaxConfig,
   Method,
-} from "https://deno.land/x/jw_fetch@v0.1.4/mod.ts";
+} from "https://deno.land/x/jw_fetch@v0.1.19/mod.ts";

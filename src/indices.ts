@@ -17,7 +17,7 @@ export class Indices {
       method,
       data: body,
       timeout,
-      query: otherParams as any,
+      query: otherParams,
       ignore: options?.ignore,
     });
   }
@@ -47,7 +47,7 @@ export class Indices {
       url: path,
       method,
       timeout,
-      query: otherParams as any,
+      query: otherParams,
       ignore: options?.ignore,
     });
   }
@@ -65,7 +65,7 @@ export class Indices {
     return ajax<DeleteIndexInfo>({
       url: path,
       method: "delete",
-      query: otherParams as any,
+      query: otherParams,
       timeout,
       ignore: options?.ignore,
     });

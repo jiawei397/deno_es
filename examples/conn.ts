@@ -1,3 +1,4 @@
+// deno-lint-ignore-file no-unused-vars
 import { Client } from "../mod.ts";
 import { v4 } from "https://deno.land/std@0.99.0/uuid/mod.ts";
 import Mock from "https://deno.land/x/deno_mock@v2.0.0/mod.ts";
@@ -9,7 +10,7 @@ await client.connect("http://elastic:369258@192.168.21.176:9200");
 
 const count = async () => {
   try {
-    const info: any = await client.count({
+    const info = await client.count({
       index: "myindex",
       method: "post",
     });
@@ -40,7 +41,7 @@ const update = async () => {
   try {
     const info = await client.update({
       index: "myindex",
-      id: '6a1194e3-b8af-4f7b-9db2-f67c169b1860',
+      id: "6a1194e3-b8af-4f7b-9db2-f67c169b1860",
       body: Mock.mock({
         "email": "@EMAIL",
         "name": "@NAME",
@@ -157,8 +158,8 @@ const search = async () => {
 // await Promise.all(Array.from(new Array(100)).map(command));
 // await Promise.all(Array.from(new Array(10000)).map(count));
 
-await create();
-// await count();
+// await create();
+await count();
 // await update();
 // await reIndex();
 // await deleteByIndex();

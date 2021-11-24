@@ -1,3 +1,4 @@
+// deno-lint-ignore-file no-explicit-any
 import { v4 } from "../../deps.ts";
 
 export function generateId() {

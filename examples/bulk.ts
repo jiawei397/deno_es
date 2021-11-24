@@ -1,3 +1,4 @@
+// deno-lint-ignore-file no-explicit-any
 import { Client } from "../mod.ts";
 
 const client = new Client();

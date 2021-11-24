@@ -1,3 +1,4 @@
+// deno-lint-ignore-file no-explicit-any
 import { assert } from "../deps.ts";
 import { Indices } from "./indices.ts";
 import {
@@ -104,26 +105,23 @@ export class Client extends BaseClient {
    */
   create(params: CreateParams, options?: ExOptions): Promise<CreatedInfo> {
     assert(this.connected);
-    let {
+    const {
       method = "PUT",
       body,
-      id,
+      id = generateId(),
       index,
       timeout,
       ...otherParams
     } = params;
-    if (!id) {
-      id = generateId();
-    }
     const path = "/" + encodeURIComponent(index) + "/" +
       encodeURIComponent(type) +
-      "/" + encodeURIComponent(id) + "/" + "_create";
+      "/" + encodeURIComponent(id!) + "/" + "_create";
     return ajax<CreatedInfo>({
       url: path,
       method,
       data: body,
       timeout,
-      query: otherParams as any,
+      query: otherParams,
       ignore: options?.ignore,
     });
   }
@@ -176,7 +174,7 @@ export class Client extends BaseClient {
       url: path,
       method: "DELETE",
       timeout,
-      query: otherParams as any,
+      query: otherParams,
     });
   }
 
@@ -207,7 +205,7 @@ export class Client extends BaseClient {
       method: "POST",
       data: body,
       timeout,
-      query: otherParams as any,
+      query: otherParams,
     });
   }
 
@@ -242,7 +240,7 @@ export class Client extends BaseClient {
           index: newIndex,
         },
       },
-      query: otherParams as any,
+      query: otherParams,
     });
   }
 
@@ -272,7 +270,7 @@ export class Client extends BaseClient {
       method,
       data: body,
       timeout,
-      query: otherParams as any,
+      query: otherParams,
     });
   }
 
@@ -296,7 +294,7 @@ export class Client extends BaseClient {
       method,
       data: serializer.ndserialize(body),
       timeout,
-      query: otherParams as any,
+      query: otherParams,
     });
   }
 }
