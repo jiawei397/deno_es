@@ -173,6 +173,18 @@ const search = async () => {
     console.error(error);
   }
 };
+
+const findById = async () => {
+  try {
+    const info = await client.get({
+      index: "myindex",
+      id: "11",
+    });
+    console.log(info);
+  } catch (error) {
+    console.error(error);
+  }
+};
 ```
 
 ## TODO

@@ -14,6 +14,8 @@ import {
   DeleteIndexInfo,
   DeleteParams,
   ExOptions,
+  GetParams,
+  GetResult,
   ReIndexInfo,
   ReIndexParams,
   SearchInfo,
@@ -269,6 +271,24 @@ export class Client extends BaseClient {
       url: path,
       method,
       data: body,
+      timeout,
+      query: otherParams,
+    });
+  }
+
+  /**
+   * get by id
+   */
+  get(params: GetParams): Promise<GetResult> {
+    assert(this.connected);
+    let { index, id, method = "GET", timeout, ...otherParams } = params;
+    assert(id, 'id is need');
+    let path = "/" + encodeURIComponent(index) + "/" + "_doc" + "/" +
+      encodeURIComponent(id);
+    return ajax<GetResult>({
+      url: path,
+      method,
+      data: {},
       timeout,
       query: otherParams,
     });

@@ -141,8 +141,10 @@ export interface ReIndexParams {
 }
 
 export interface SearchParams {
-  method?: Method;
   index: string;
+  body: object;
+
+  method?: Method;
   analyzer?: string;
   analyze_wildcard?: boolean;
   ccs_minimize_roundtrips?: boolean;
@@ -164,7 +166,7 @@ export interface SearchParams {
   search_type?: "query_then_fetch" | "dfs_query_then_fetch";
   size?: number;
   sort?: string | string[];
-  _source: boolean | string | string[] | {
+  _source?: boolean | string | string[] | {
     includes: string[];
     excludes: string[];
   };
@@ -189,7 +191,21 @@ export interface SearchParams {
   pre_filter_shard_size?: number;
   rest_total_hits_as_int?: boolean;
   min_compatible_shard_node?: string;
-  body: object;
+}
+
+export type GetParams = Omit<SearchParams, "body"> & {
+  id: string;
+};
+
+export interface GetResult {
+  _index: string;
+  _type: string;
+  _id: string;
+  _version: number;
+  found: boolean;
+  _source: object;
+  _seq_no: number;
+  _primary_term: number;
 }
 
 export interface DeleteParams {
@@ -240,6 +256,7 @@ interface IDeleteByQueryParams {
   requests_per_second: number;
   slices: number | string;
 }
+
 export type DeleteByQueryParams = {
   index: string | string[];
   body: object;
@@ -297,6 +314,7 @@ interface ICountParams {
   lenient: boolean;
   terminate_after: number;
 }
+
 export type CountParams = {
   index: string | string[];
   body?: object;

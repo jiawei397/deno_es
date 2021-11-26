@@ -170,6 +170,18 @@ const search = async () => {
   }
 };
 
+const findById = async () => {
+  try {
+    const info = await client.get({
+      index: "myindex",
+      id: "11",
+    });
+    console.log(info);
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 // const command = async () => {
 //   return await limit(async () => {
 //     const time = 100 * Math.round(Math.random() * 10);
@@ -185,8 +197,9 @@ const search = async () => {
 // await create();
 // await count();
 // await update();
-await createIndex();
+// await createIndex();
 // await reIndex();
+await findById();
 // await deleteByIndex();
 
 // await stat();
