@@ -164,7 +164,10 @@ export interface SearchParams {
   search_type?: "query_then_fetch" | "dfs_query_then_fetch";
   size?: number;
   sort?: string | string[];
-  _source?: string | string[];
+  _source: boolean | string | string[] | {
+    includes: string[];
+    excludes: string[];
+  };
   _source_excludes?: string | string[];
   _source_includes?: string | string[];
   terminate_after?: number;
