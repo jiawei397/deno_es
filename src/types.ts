@@ -20,7 +20,7 @@ export interface StatInfo {
 export interface Hit {
   _index: string;
   _type: string;
-  _source: ObjectConstructor[];
+  _source: Record<string, unknown>;
   _id: string;
   _score: number;
 }
