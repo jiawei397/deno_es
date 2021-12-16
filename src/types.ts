@@ -67,6 +67,8 @@ export interface CreatedInfo {
   _primary_term: number;
 }
 
+export interface IndexInfo extends CreatedInfo {}
+
 export interface UpdatedInfo extends CreatedInfo {
 }
 
@@ -326,6 +328,19 @@ export type CountParams = {
   body?: object;
   method?: Method;
 } & Partial<ICountParams>;
+
+export interface IndexParams {
+  id?: string;
+  index: string;
+  body: object;
+  wait_for_active_shards?: string;
+  refresh?: "true" | "false" | "wait_for";
+  routing?: string;
+  timeout?: number;
+  version?: number;
+  version_type?: "internal" | "external" | "external_gte";
+  pipeline?: string;
+}
 
 export interface CreateParams {
   method?: Method;

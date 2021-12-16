@@ -104,6 +104,22 @@ const updateMany = async () => {
   }
 };
 
+const index = async () => {
+  try {
+    const info = await client.index({
+      index: "myindex",
+      id: "AUA9wn0BCqCFQFsiKm3G", // if no id , it will create one
+      body: {
+        "title": "hello",
+        "content": "world",
+      },
+    });
+    console.log(info);
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 const deleteById = async () => {
   try {
     const info = await client.delete({
@@ -230,7 +246,9 @@ const findById = async () => {
 // await findById();
 // console.timeEnd("findById");
 
-await updateMany();
+// await updateMany();
+
+await index();
 
 // await deleteByIndex();
 

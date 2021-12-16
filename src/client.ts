@@ -1,5 +1,5 @@
 // deno-lint-ignore-file no-explicit-any
-import { assert, yellow } from "../deps.ts";
+import { assert, Method, yellow } from "../deps.ts";
 import { Indices } from "./indices.ts";
 import {
   BulkInfo,
@@ -17,6 +17,8 @@ import {
   ExOptions,
   GetParams,
   GetResult,
+  IndexInfo,
+  IndexParams,
   ReIndexInfo,
   ReIndexParams,
   SearchInfo,
@@ -107,6 +109,39 @@ export class Client extends BaseClient {
       method: method!,
       data: body,
       query: otherParams as any,
+      ignore: options?.ignore,
+    });
+  }
+
+  /**
+   * insert a document or replace it if it already exists
+   * @see {@link https://github.com/elastic/elasticsearch-js/blob/main/src/api/api/index.ts}
+   */
+  index(params: IndexParams, options?: ExOptions): Promise<IndexInfo> {
+    assert(this.connected);
+    const {
+      body,
+      id,
+      index,
+      timeout,
+      ...otherParams
+    } = params;
+    let path = "", method: Method;
+    if (index && id) {
+      method = "PUT";
+      path = `/${encodeURIComponent(index.toString())}/_doc/${
+        encodeURIComponent(id.toString())
+      }`;
+    } else {
+      method = "POST";
+      path = `/${encodeURIComponent(index.toString())}/_doc`;
+    }
+    return ajax<CreatedInfo>({
+      url: path,
+      method,
+      data: body,
+      timeout,
+      query: otherParams,
       ignore: options?.ignore,
     });
   }
