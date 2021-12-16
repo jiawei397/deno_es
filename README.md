@@ -58,6 +58,52 @@ const update = async () => {
   }
 };
 
+const index = async () => {
+  try {
+    const info = await client.index({
+      index: "myindex",
+      id: "AUA9wn0BCqCFQFsiKm3G", // if no id , it will create one
+      body: {
+        "title": "hello",
+        "content": "world",
+      },
+    });
+    console.log(info);
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+const updateByQuery = async () => {
+  try {
+    // const info = await client.updateByQuery({
+    //   index: "myindex",
+    //   body: {
+    //     query: {
+    //       match: {
+    //         name: "Richard Hall",
+    //       },
+    //     },
+    //     "script": {
+    //       "source": 'ctx._source.message = "updated"',
+    //     },
+    //   },
+    // });
+    const info = await client.updateByQuery({
+      index: "myindex",
+      query: {
+        name: "Richard Hall",
+      },
+      script: {
+        source: 'ctx._source.message = "updated2"',
+      },
+    });
+    console.log(info);
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 const deleteById = async () => {
   try {
     const info = await client.delete({

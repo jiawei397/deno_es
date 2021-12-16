@@ -74,7 +74,7 @@ const update = async () => {
   }
 };
 
-const updateMany = async () => {
+const updateByQuery = async () => {
   try {
     // const info = await client.updateByQuery({
     //   index: "myindex",
