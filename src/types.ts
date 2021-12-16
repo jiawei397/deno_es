@@ -356,7 +356,7 @@ interface IUpdateParams {
 }
 
 export type UpdateParams = {
-  id: string | number;
+  id?: string | number;
   index: string;
   body: object;
   isOriginData?: boolean;
