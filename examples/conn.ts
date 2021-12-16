@@ -74,6 +74,36 @@ const update = async () => {
   }
 };
 
+const updateMany = async () => {
+  try {
+    // const info = await client.updateByQuery({
+    //   index: "myindex",
+    //   body: {
+    //     query: {
+    //       match: {
+    //         name: "Richard Hall",
+    //       },
+    //     },
+    //     "script": {
+    //       "source": 'ctx._source.message = "updated"',
+    //     },
+    //   },
+    // });
+    const info = await client.updateByQuery({
+      index: "myindex",
+      query: {
+        name: "Richard Hall",
+      },
+      script: {
+        source: 'ctx._source.message = "updated2"',
+      },
+    });
+    console.log(info);
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 const deleteById = async () => {
   try {
     const info = await client.delete({
@@ -196,9 +226,11 @@ const findById = async () => {
 // await update();
 // await createIndex();
 // await reIndex();
-console.time("findById");
-await findById();
-console.timeEnd("findById");
+// console.time("findById");
+// await findById();
+// console.timeEnd("findById");
+
+await updateMany();
 
 // await deleteByIndex();
 

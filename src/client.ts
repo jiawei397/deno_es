@@ -21,6 +21,7 @@ import {
   ReIndexParams,
   SearchInfo,
   SearchParams,
+  UpdateByQueryParams,
   UpdatedInfo,
   UpdateParams,
 } from "./types.ts";
@@ -160,6 +161,72 @@ export class Client extends BaseClient {
       data: isOriginData ? body : {
         doc: body,
       },
+      timeout,
+      query: otherParams as any,
+      ignore: options?.ignore,
+    });
+  }
+
+  /**
+   * update by query
+   * if you want to update by query, you must set the `query` param and `script` param like this:
+   * ```ts
+   * const info = await client.updateByQuery({
+   *   index: "myindex",
+   *   query: {
+   *     name: "Richard Hall",
+   *   },
+   *   script: {
+   *     source: 'ctx._source.message = "updated2"',
+   *   },
+   * });
+   * ```
+   *
+   * Or you can set the `body` param yourself like:
+   * ```json
+   * {
+        query: {
+          match: {
+            name: "Richard Hall",
+          },
+        },
+        "script": {
+          "source": 'ctx._source.message = "updated"',
+        },
+      },
+   * ```
+   * @see {@link https://github.com/elastic/elasticsearch-js/blob/main/src/api/api/update_by_query.ts}
+   */
+  updateByQuery(
+    params: UpdateByQueryParams,
+    options?: ExOptions,
+  ): Promise<UpdatedInfo> {
+    assert(this.connected);
+    const {
+      body,
+      query,
+      script,
+      index,
+      timeout,
+      ...otherParams
+    } = params;
+    const path = `/${encodeURIComponent(index)}/_update_by_query`;
+    let data = body;
+    if (!body) {
+      if (!query || !script) {
+        throw new Error("query or script is required");
+      }
+      data = {
+        query: {
+          match: query,
+        },
+        script,
+      };
+    }
+    return ajax<UpdatedInfo>({
+      url: path,
+      method: "POST",
+      data,
       timeout,
       query: otherParams as any,
       ignore: options?.ignore,

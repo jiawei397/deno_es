@@ -356,10 +356,17 @@ interface IUpdateParams {
 }
 
 export type UpdateParams = {
-  id?: string | number;
+  id: string | number;
   index: string;
   body: object;
   isOriginData?: boolean;
+} & Partial<IUpdateParams>;
+
+export type UpdateByQueryParams = {
+  index: string;
+  body?: object;
+  query?: object;
+  script?: object;
 } & Partial<IUpdateParams>;
 
 export interface DeleteIndexParams {
