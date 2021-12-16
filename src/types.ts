@@ -112,6 +112,7 @@ export interface BulkInfo {
       _version: number;
       _primary_term: number;
       status: number;
+      error?: Error;
     };
   }[];
 }
