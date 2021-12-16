@@ -1,9 +1,6 @@
 // deno-lint-ignore-file no-unused-vars
 import { Client } from "../mod.ts";
-import { v4 } from "https://deno.land/std@0.99.0/uuid/mod.ts";
 import Mock from "https://deno.land/x/deno_mock@v2.0.0/mod.ts";
-import { delay } from "../deps.ts";
-import { limit } from "../src/utils/task.ts";
 
 const client = new Client();
 await client.connect("http://elastic:369258@192.168.21.176:9200");
@@ -199,7 +196,10 @@ const findById = async () => {
 // await update();
 // await createIndex();
 // await reIndex();
+console.time("findById");
 await findById();
+console.timeEnd("findById");
+
 // await deleteByIndex();
 
 // await stat();

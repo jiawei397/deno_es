@@ -23,7 +23,7 @@ import {
   UpdatedInfo,
   UpdateParams,
 } from "./types.ts";
-import { Ajax, ajax } from "./utils/ajax.ts";
+import { Ajax, ajax, setMaxTaskCount } from "./utils/ajax.ts";
 import { serializer } from "./utils/serializer.ts";
 import { generateId } from "./utils/tools.ts";
 
@@ -41,28 +41,26 @@ class BaseClient {
 
   connected = false;
 
-  private connectDB(db: string) {
+  private async connectDB(db: string, maxTaskCount = 100) {
     this.db = db;
     Ajax.defaults.baseURL = db;
-    return fetch(db).then((res) => {
-      if (res.ok) {
-        this.connected = true;
-        return res.json();
-      }
-      return Promise.reject(res.json());
-    });
+    setMaxTaskCount(maxTaskCount);
+    const res = await fetch(db);
+    if (res.ok) {
+      this.connected = true;
+      return res.json();
+    }
+    return await Promise.reject(res.json());
   }
 
-  connect(
-    cacheKey: string,
-  ): Promise<any> {
+  connect(db: string): Promise<any> {
     try {
-      if (this.#connectionCache.has(cacheKey)) {
-        return this.#connectionCache.get(cacheKey);
+      if (this.#connectionCache.has(db)) {
+        return this.#connectionCache.get(db);
       }
-      const promise = this.connectDB(cacheKey);
+      const promise = this.connectDB(db);
       this.connectedCount++;
-      this.#connectionCache.set(cacheKey, promise);
+      this.#connectionCache.set(db, promise);
       return promise;
     } catch (e) {
       throw new Error(`Connection failed: ${e.message || e}`);
@@ -282,7 +280,7 @@ export class Client extends BaseClient {
   get(params: GetParams): Promise<GetResult> {
     assert(this.connected);
     let { index, id, method = "GET", timeout, ...otherParams } = params;
-    assert(id, 'id is need');
+    assert(id, "id is need");
     let path = "/" + encodeURIComponent(index) + "/" + "_doc" + "/" +
       encodeURIComponent(id);
     return ajax<GetResult>({

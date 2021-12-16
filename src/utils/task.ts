@@ -1,6 +1,4 @@
 // deno-lint-ignore-file no-explicit-any
-// 限流
-
 type TaskCallback = (arg: any) => any;
 type TaskFunc = () => Promise<any>;
 
@@ -15,20 +13,18 @@ const tasks: Task[] = [];
 
 let currentTaskCount = 0;
 
-const maxTaskCount = 100; // 允许最大请求的fetch数量
-
-export function limit<T>(func: TaskFunc): Promise<T> {
+export function limit<T>(func: TaskFunc, maxTaskCount: number): Promise<T> {
   return new Promise((resolve, reject) => {
     tasks.push({
       func,
       success: resolve,
       error: reject,
     });
-    runTask();
+    runTask(maxTaskCount);
   });
 }
 
-function runTask() {
+function runTask(maxTaskCount: number) {
   while (currentTaskCount < maxTaskCount) {
     const task = tasks.shift();
     if (!task) {
@@ -41,7 +37,7 @@ function runTask() {
       task.error(err);
     }).finally(() => {
       currentTaskCount--;
-      runTask();
+      runTask(maxTaskCount);
     });
   }
 }

@@ -19,8 +19,14 @@ export class Ajax extends BaseAjax {
 
 const instance = new Ajax();
 
+let maxTaskCount = 100;
+
 export const ajax = <T>(config: AjaxConfig) => {
   return limit<T>(() => {
     return instance.ajax(config);
-  });
+  }, maxTaskCount);
 };
+
+export function setMaxTaskCount(count: number) {
+  maxTaskCount = count;
+}
