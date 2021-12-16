@@ -1,5 +1,5 @@
 // deno-lint-ignore-file no-explicit-any
-import { assert } from "../deps.ts";
+import { assert, yellow } from "../deps.ts";
 import { Indices } from "./indices.ts";
 import {
   BulkInfo,
@@ -13,6 +13,7 @@ import {
   DeletedInfo,
   DeleteIndexInfo,
   DeleteParams,
+  ElasticSearchOptions,
   ExOptions,
   GetParams,
   GetResult,
@@ -40,24 +41,34 @@ class BaseClient {
   connectedCount = 0;
 
   connected = false;
+  options?: ElasticSearchOptions;
 
-  private async connectDB(db: string, maxTaskCount = 100) {
+  constructor(options?: ElasticSearchOptions) {
+    if (options) {
+      this.options = options;
+      this.connect(options.db, options.maxTaskCount);
+    }
+  }
+
+  private async connectDB(db: string) {
     this.db = db;
     Ajax.defaults.baseURL = db;
-    setMaxTaskCount(maxTaskCount);
+
     const res = await fetch(db);
     if (res.ok) {
       this.connected = true;
+      console.info("connect to elasticsearch success", yellow(db));
       return res.json();
     }
     return await Promise.reject(res.json());
   }
 
-  connect(db: string): Promise<any> {
+  connect(db: string, maxTaskCount = 100): Promise<any> {
     try {
       if (this.#connectionCache.has(db)) {
         return this.#connectionCache.get(db);
       }
+      setMaxTaskCount(maxTaskCount);
       const promise = this.connectDB(db);
       this.connectedCount++;
       this.#connectionCache.set(db, promise);

@@ -1,6 +1,11 @@
 // deno-lint-ignore-file camelcase ban-types no-explicit-any no-empty-interface
 import { Method } from "../deps.ts";
 
+export interface ElasticSearchOptions {
+  db: string;
+  maxTaskCount?: number;
+}
+
 export interface StatInfo {
   _shards: {
     total: number;

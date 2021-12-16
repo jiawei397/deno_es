@@ -12,3 +12,22 @@ export type {
   AjaxConfig,
   Method,
 } from "https://deno.land/x/jw_fetch@v0.1.19/mod.ts";
+export {
+  bgBlue,
+  bgRgb24,
+  bgRgb8,
+  blue,
+  bold,
+  green,
+  italic,
+  red,
+  rgb24,
+  rgb8,
+  yellow,
+} from "https://deno.land/std@0.97.0/fmt/colors.ts";
+export {
+  Inject,
+  Injectable,
+} from "https://deno.land/x/oak_nest@v0.6.5/src/decorators/inject.ts";
+
+export type { DynamicModule } from "https://deno.land/x/oak_nest@v0.6.5/src/interfaces/module.interface.ts";

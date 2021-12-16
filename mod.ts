@@ -1,3 +1,4 @@
 export { Client } from "./src/client.ts";
 
-export const version = "0.1.0";
+export { ElasticsearchModule } from "./src/nest/es.module.ts";
+export { ElasticsearchService } from "./src/nest/es.service.ts";
