@@ -1,16 +1,6 @@
 version: 0.3.4
 name: deno_es
 scripts:
-  dev:
-    cmd: deno run examples/nest/main.ts
-    desc: run oak_nest test file
-    allow:
-      - net
-      - env
-    unstable: true
-    tsconfig: tsconfig.json
-    env:
-      PORT: '1000'
   conn:
     cmd: deno run -A examples/conn.ts
     watch: false    

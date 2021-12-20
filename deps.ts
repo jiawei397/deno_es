@@ -25,9 +25,3 @@ export {
   rgb8,
   yellow,
 } from "https://deno.land/std@0.97.0/fmt/colors.ts";
-export {
-  Inject,
-  Injectable,
-} from "https://deno.land/x/oak_nest@v0.6.5/src/decorators/inject.ts";
-
-export type { DynamicModule } from "https://deno.land/x/oak_nest@v0.6.5/src/interfaces/module.interface.ts";
