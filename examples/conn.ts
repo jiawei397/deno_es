@@ -2,8 +2,9 @@
 import { Client } from "../mod.ts";
 import Mock from "https://deno.land/x/deno_mock@v2.0.0/mod.ts";
 
+const url = "http://elastic:369258@192.168.21.176:9200";
 const client = new Client();
-await client.connect("http://elastic:369258@192.168.21.176:9200");
+await client.connect(url);
 
 const count = async () => {
   try {
@@ -243,12 +244,12 @@ const findById = async () => {
 // await createIndex();
 // await reIndex();
 // console.time("findById");
-// await findById();
+await findById();
 // console.timeEnd("findById");
 
 // await updateMany();
 
-await index();
+// await index();
 
 // await deleteByIndex();
 

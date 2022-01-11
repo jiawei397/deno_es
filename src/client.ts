@@ -1,5 +1,5 @@
 // deno-lint-ignore-file no-explicit-any
-import { assert, Method, yellow } from "../deps.ts";
+import { assert, Method, red, yellow } from "../deps.ts";
 import { Indices } from "./indices.ts";
 import {
   BulkInfo,
@@ -49,7 +49,9 @@ class BaseClient {
   constructor(options?: ElasticSearchOptions) {
     if (options) {
       this.options = options;
-      this.connect(options.db, options.maxTaskCount);
+      this.connect(options.db, options.maxTaskCount).catch((err) => {
+        console.error(red(`Connect to elasticsearch failed`), err);
+      });
     }
   }
 
@@ -60,25 +62,25 @@ class BaseClient {
     const res = await fetch(db);
     if (res.ok) {
       this.connected = true;
-      console.info("connect to elasticsearch success", yellow(db));
+      console.info("Connect to elasticsearch success", yellow(db));
       return res.json();
     }
-    return await Promise.reject(res.json());
+    return Promise.reject(await res.json());
   }
 
   connect(db: string, maxTaskCount = 100): Promise<any> {
-    try {
-      if (this.#connectionCache.has(db)) {
-        return this.#connectionCache.get(db);
-      }
-      setMaxTaskCount(maxTaskCount);
-      const promise = this.connectDB(db);
-      this.connectedCount++;
-      this.#connectionCache.set(db, promise);
-      return promise;
-    } catch (e) {
-      throw new Error(`Connection failed: ${e.message || e}`);
+    if (this.#connectionCache.has(db)) {
+      return this.#connectionCache.get(db);
     }
+    setMaxTaskCount(maxTaskCount);
+    const promise = this.connectDB(db).catch((err) => {
+      this.connectedCount--;
+      this.#connectionCache.delete(db);
+      return Promise.reject(err);
+    });
+    this.connectedCount++;
+    this.#connectionCache.set(db, promise);
+    return promise;
   }
 
   close() {
