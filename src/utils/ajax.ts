@@ -9,11 +9,11 @@ export class Ajax extends BaseAjax {
     console.error(
       `HTTP error, status = ${response.status}, statusText = ${response.statusText}`,
     );
-    if (response.status === 401) { //权限问题
-      this.stopAjax();
-      this.abortAll();
-      // toLogin();
-    }
+    // if (response.status === 401) { //权限问题
+    //   this.stopAjax();
+    //   this.abortAll();
+    // toLogin();
+    // }
   }
 }
 
