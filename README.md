@@ -5,7 +5,7 @@
 ## Examples
 
 ```ts
-import { Client } from "https://deno.land/x/deno_es@v0.4.0/mod.ts";
+import { Client } from "https://deno.land/x/deno_es@v0.4.1/mod.ts";
 import { v4 } from "https://deno.land/std@0.99.0/uuid/mod.ts";
 import Mock from "https://deno.land/x/deno_mock@v2.0.0/mod.ts";
 
