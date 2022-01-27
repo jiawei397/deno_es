@@ -30,6 +30,7 @@ export function resetBaseURLCursor() {
   baseURLCursor = 0;
 }
 
+// urls怎么复活，怎么停止，比较复杂，可以参考：https://github.com/elastic/elastic-transport-js/blob/main/src/pool/ClusterConnectionPool.ts
 instance.interceptors.request.use((config: AjaxConfig) => {
   if (baseURLs.length > 0) {
     if (baseURLs.length === 1) {
