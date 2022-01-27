@@ -19,6 +19,33 @@ export class Ajax extends BaseAjax {
 
 const instance = new Ajax();
 
+let baseURLs: string[] = [];
+let baseURLCursor = 0;
+
+export function setBaseURLs(urls: string[]) {
+  baseURLs = urls;
+}
+
+export function resetBaseURLCursor() {
+  baseURLCursor = 0;
+}
+
+instance.interceptors.request.use((config: AjaxConfig) => {
+  if (baseURLs.length > 0) {
+    if (baseURLs.length === 1) {
+      config.baseURL = baseURLs[0];
+    } else {
+      config.baseURL = baseURLs[baseURLCursor];
+      baseURLCursor = (baseURLCursor + 1) % baseURLs.length;
+    }
+  }
+  console.debug(config.baseURL);
+  return config;
+}, (error: Error) => {
+  console.error(error);
+  return Promise.reject(error);
+});
+
 let maxTaskCount = 100;
 
 export const ajax = <T>(config: AjaxConfig) => {

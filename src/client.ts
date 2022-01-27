@@ -27,21 +27,14 @@ import {
   UpdatedInfo,
   UpdateParams,
 } from "./types.ts";
-import { Ajax, ajax, setMaxTaskCount } from "./utils/ajax.ts";
+import { Ajax, ajax, setBaseURLs, setMaxTaskCount } from "./utils/ajax.ts";
 import { serializer } from "./utils/serializer.ts";
 import { generateId } from "./utils/tools.ts";
 
 const type = "_doc";
 
 class BaseClient {
-  // cache db
-  #dbCache = new Map();
-
-  #connectionCache = new Map();
-
-  db: string | undefined;
-
-  connectedCount = 0;
+  dbs: string[] = [];
 
   connected = false;
   options?: ElasticSearchOptions;
@@ -49,44 +42,48 @@ class BaseClient {
   constructor(options?: ElasticSearchOptions) {
     if (options) {
       this.options = options;
-      this.connect(options.db, options.maxTaskCount).catch((err) => {
-        console.error(red(`Connect to elasticsearch failed`), err);
-      });
+      this.connect(options.db, options.maxTaskCount);
     }
   }
 
   private async connectDB(db: string) {
-    this.db = db;
     Ajax.defaults.baseURL = db;
 
-    const res = await fetch(db);
+    const res = await fetch(db, {
+      method: "HEAD",
+    });
     if (res.ok) {
       this.connected = true;
       console.info("Connect to elasticsearch success", yellow(db));
-      return res.json();
+      return;
     }
-    return Promise.reject(await res.json());
+    return Promise.reject(res);
   }
 
-  connect(db: string, maxTaskCount = 100): Promise<any> {
-    if (this.#connectionCache.has(db)) {
-      return this.#connectionCache.get(db);
-    }
+  async connect(dbs: string[] | string, maxTaskCount = 100): Promise<any> {
     setMaxTaskCount(maxTaskCount);
-    const promise = this.connectDB(db).catch((err) => {
-      this.connectedCount--;
-      this.#connectionCache.delete(db);
-      return Promise.reject(err);
-    });
-    this.connectedCount++;
-    this.#connectionCache.set(db, promise);
-    return promise;
+    this.dbs = Array.isArray(dbs) ? dbs : [dbs];
+    const activatedUrls: string[] = [];
+    await Promise.all(this.dbs.map(async (db) => {
+      try {
+        await this.connectDB(db);
+        activatedUrls.push(db);
+      } catch (err) {
+        console.error(
+          red(`Connect to elasticsearch failed`),
+          yellow(db),
+          err,
+        );
+      }
+    }));
+    if (activatedUrls.length === 0) {
+      console.error(red("No elasticsearch server available"));
+      return;
+    }
+    setBaseURLs(activatedUrls);
   }
 
   close() {
-    this.#dbCache.clear();
-    this.#connectionCache.clear();
-    this.connectedCount = 0;
   }
 }
 

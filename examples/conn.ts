@@ -2,9 +2,14 @@
 import { Client } from "../mod.ts";
 import Mock from "https://deno.land/x/deno_mock@v2.0.0/mod.ts";
 
-const url = "http://elastic:369258@192.168.21.176:9200";
+// const url = "http://elastic:uinnova@2022@10.100.31.168:9200";
+const urls = [
+  "http://elastic:uinnova@2022@10.100.31.163:9200",
+  "http://elastic:uinnova@2022@10.100.31.168:9200",
+  "http://elastic:uinnova@2022@10.100.31.160:9200",
+];
 const client = new Client();
-await client.connect(url);
+await client.connect(urls);
 
 const count = async () => {
   try {
@@ -217,10 +222,10 @@ const search = async () => {
 const findById = async () => {
   try {
     const info = await client.get({
-      index: "myindex",
-      id: "11",
+      index: "uzhi-blog",
+      id: "613815dc5a24958acd8c6579",
     });
-    console.log(info);
+    // console.log(info);
   } catch (error) {
     console.error(error);
   }
@@ -244,6 +249,10 @@ const findById = async () => {
 // await createIndex();
 // await reIndex();
 // console.time("findById");
+await findById();
+await findById();
+await findById();
+await findById();
 await findById();
 // console.timeEnd("findById");
 
