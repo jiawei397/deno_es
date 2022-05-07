@@ -28,6 +28,7 @@ export interface Hit {
   _source: Record<string, unknown>;
   _id: string;
   _score: number;
+  highlight?: Record<string, string[]>;
 }
 
 export interface SearchInfo {
