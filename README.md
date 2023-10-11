@@ -5,7 +5,7 @@
 ## Examples
 
 ```ts
-import { Client } from "https://deno.land/x/deno_es@v0.5.0/mod.ts";
+import { Client } from "https://deno.land/x/deno_es@v0.5.1/mod.ts";
 import Mock from "https://deno.land/x/deno_mock@v2.0.0/mod.ts";
 
 const client = new Client();
