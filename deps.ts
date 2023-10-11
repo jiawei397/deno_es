@@ -2,12 +2,11 @@ export {
   assert,
   assertEquals,
 } from "https://deno.land/std@0.120.0/testing/asserts.ts";
-export { v4 } from "https://deno.land/std@0.120.0/uuid/mod.ts";
-export { BaseAjax } from "https://deno.land/x/jw_fetch@v0.2.5/mod.ts";
+export { Ajax } from "https://deno.land/x/jwfetch@v1.2.0/mod.ts";
 export type {
   AjaxConfig,
   Method,
-} from "https://deno.land/x/jw_fetch@v0.2.5/mod.ts";
+} from "https://deno.land/x/jwfetch@v1.2.0/mod.ts";
 export {
   bgBlue,
   bgRgb24,

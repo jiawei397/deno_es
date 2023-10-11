@@ -1,4 +1,4 @@
-// deno-lint-ignore-file camelcase ban-types no-explicit-any no-empty-interface
+// deno-lint-ignore-file camelcase no-explicit-any no-empty-interface
 import { Method } from "../deps.ts";
 
 export interface ElasticSearchOptions {

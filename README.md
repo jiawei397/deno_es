@@ -6,7 +6,6 @@
 
 ```ts
 import { Client } from "https://deno.land/x/deno_es@v0.4.3/mod.ts";
-import { v4 } from "https://deno.land/std@0.99.0/uuid/mod.ts";
 import Mock from "https://deno.land/x/deno_mock@v2.0.0/mod.ts";
 
 const client = new Client();

@@ -2,7 +2,8 @@
 import { Client } from "../mod.ts";
 import Mock from "https://deno.land/x/deno_mock@v2.0.0/mod.ts";
 
-const url = "http://elastic:369258@192.168.21.176:9200";
+const url = "http://10.100.30.65:9200";
+// const url = "http://elastic:369258@192.168.21.176:9200";
 const client = new Client();
 await client.connect(url);
 
@@ -223,6 +224,8 @@ const findById = async () => {
     console.log(info);
   } catch (error) {
     console.error(error);
+    const err = JSON.parse(error.message);
+    console.log(err);
   }
 };
 

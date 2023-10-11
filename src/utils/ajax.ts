@@ -1,21 +1,5 @@
-import { AjaxConfig, BaseAjax } from "../../deps.ts";
+import { AjaxConfig, Ajax } from "../../deps.ts";
 import { limit } from "./task.ts";
-
-export class Ajax extends BaseAjax {
-  /**
-   * 处理错误请求
-   */
-  protected handleErrorResponse(response: Response) {
-    console.error(
-      `HTTP error, status = ${response.status}, statusText = ${response.statusText}`,
-    );
-    // if (response.status === 401) { //权限问题
-    //   this.stopAjax();
-    //   this.abortAll();
-    // toLogin();
-    // }
-  }
-}
 
 const instance = new Ajax();
 

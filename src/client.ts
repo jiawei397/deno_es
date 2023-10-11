@@ -1,5 +1,5 @@
 // deno-lint-ignore-file no-explicit-any
-import { assert, Method, red, yellow } from "../deps.ts";
+import { Ajax, assert, Method, red, yellow } from "../deps.ts";
 import { Indices } from "./indices.ts";
 import {
   BulkInfo,
@@ -27,7 +27,7 @@ import {
   UpdatedInfo,
   UpdateParams,
 } from "./types.ts";
-import { Ajax, ajax, setMaxTaskCount } from "./utils/ajax.ts";
+import { ajax, setMaxTaskCount } from "./utils/ajax.ts";
 import { serializer } from "./utils/serializer.ts";
 import { generateId } from "./utils/tools.ts";
 
@@ -373,7 +373,7 @@ export class Client extends BaseClient {
     assert(this.connected);
     let { index, method, body, timeout, ...otherParams } = params;
     let path = "";
-    if ((index) != null) {
+    if (index != null) {
       if (method == null) method = body == null ? "GET" : "POST";
       path = "/" + encodeURIComponent(index) + "/" + "_search";
     } else {
@@ -394,9 +394,9 @@ export class Client extends BaseClient {
    */
   get(params: GetParams): Promise<GetResult> {
     assert(this.connected);
-    let { index, id, method = "GET", timeout, ...otherParams } = params;
+    const { index, id, method = "GET", timeout, ...otherParams } = params;
     assert(id, "id is need");
-    let path = "/" + encodeURIComponent(index) + "/" + "_doc" + "/" +
+    const path = "/" + encodeURIComponent(index) + "/" + "_doc" + "/" +
       encodeURIComponent(id);
     return ajax<GetResult>({
       url: path,

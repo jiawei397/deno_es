@@ -1,0 +1,9 @@
+{
+  "name": "deno_es",
+  "version": "0.4.3",
+  "lock": false,
+  "tasks": {
+    "dev": "deno run -A examples/conn.ts",
+    "log": "conventional-changelog -p angular -i CHANGELOG.md -s -r 0"
+  }
+}
